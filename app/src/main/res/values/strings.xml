@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">sample</string>
+    <string name="spinner_title">state</string>
+    <string-array name="selectbranch">
+        <item>CSE</item>
+        <item>ECE</item>
+        <item>IT</item>
+    </string-array>
+</resources>
