@@ -9,39 +9,72 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sample.modals.MandalData;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Mandal extends AppCompatActivity {
     Button bt1;
     DatabaseHelper d3;
-    EditText stnm,stc,dstnm,dstc,mnnm,mnc;
-    String sstnm,sstc,sdstnm,sdstc,smnnm,smnc;
+    EditText edtstate,edtstatecode,edtdistrictname,edtdistrictcode,edtmandal,edtmandalcode ;
+    String state,statecode,district,districtcode,mandal,mandalcode;
+    DatabaseReference myref;
     protected void onCreate(Bundle savedinstance) {
         super.onCreate(savedinstance);
         setContentView(R.layout.mandal);
+
+        myref = FirebaseDatabase.getInstance().getReference().child("Mandal_Records");
+
         bt1=findViewById(R.id.mregister);
         d3=new DatabaseHelper(this);
-        stnm=findViewById(R.id.mstate);
-        stc=findViewById(R.id.mstatec);
-        dstnm=findViewById(R.id.mdistrict);
-        dstc=findViewById(R.id.mdistrictc);
-        mnnm=findViewById(R.id.mandal);
-        mnc=findViewById(R.id.mandalc);
+        edtstate=findViewById(R.id.mstate);
+        edtstatecode=findViewById(R.id.mstatecode);
+        edtdistrictname=findViewById(R.id.mdistrictname);
+        edtdistrictcode=findViewById(R.id.mdistrictcode);
+        edtmandal=findViewById(R.id.mandalname);
+        edtmandalcode=findViewById(R.id.mandalcode);
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sstnm = stnm.getText().toString();
-                sstc = stc.getText().toString();
-                sdstnm = dstnm.getText().toString();
-                sdstc = dstc.getText().toString();
-                smnnm = mnnm.getText().toString();
-                smnc = mnc.getText().toString();
-                boolean res = d3.mndlins(smnc, smnnm, sdstc, sdstnm, sstc, sstnm);
+                state = edtstate.getText().toString();
+                statecode= edtstatecode.getText().toString();
+                district= edtdistrictname.getText().toString();
+                districtcode= edtdistrictcode.getText().toString();
+                mandal= edtmandal.getText().toString();
+                mandalcode = edtmandalcode.getText().toString();
+
+                if(state.isEmpty()) {
+                    edtstate.setError("Please enter State name");
+                } else if(statecode.isEmpty()) {
+                    edtstatecode.setError("Please enter State Code");
+                } else if(district.isEmpty()) {
+                    edtdistrictname.setError("Please enter District Name");
+                } else if(districtcode.isEmpty()) {
+                    edtdistrictcode.setError("Please enter District Code");
+                } else if(mandal.isEmpty()) {
+                    edtmandal.setError("Please enter Mandal");
+                } else if(mandalcode.isEmpty()) {
+                    edtmandalcode.setError("Please enter Mandal Code");
+                } else {
+
+                    myref.push().setValue(new MandalData(state, statecode, district, districtcode, mandal, mandalcode));
+
+                    Toast.makeText(Mandal.this, "Record Inserted Successfully !", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(Mandal.this, Activityselect.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+
+
+                /*boolean res = d3.mndlins(smnc, smnnm, sdstc, sdstnm, sstc, sstnm);
                 if (res == false) {
                     Toast.makeText(v.getContext(), "not inserted", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(v.getContext(),"inserted",Toast.LENGTH_SHORT).show();
                     Intent m1 = new Intent(v.getContext(), Register.class);
                     startActivity(m1);
-                }
+                }*/
             }
         });
 

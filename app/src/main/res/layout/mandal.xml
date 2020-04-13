@@ -6,8 +6,6 @@
     android:orientation="vertical"
     android:gravity="center">
 
-
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,10 +38,9 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:layout_gravity="center"
-                        android:text="Mandal Registration Form"
-                        android:textSize="23dp"
+                        android:text="@string/mandal_registration_form"
+                        android:textSize="23sp"
                         android:textColor="@android:color/white"
-
                         />
                 </LinearLayout>
                 <LinearLayout
@@ -60,11 +57,10 @@
                         android:gravity="left"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="State:"
+                        android:text="@string/state"
                         android:layout_margin="10dp"
-                        android:textSize="18dp"
-                        android:textColor="@android:color/black"
-                        ></TextView>
+                        android:textSize="18sp"
+                        android:textColor="@android:color/black"/>
                     <EditText
                         android:id="@+id/mstate"
                         android:layout_width="match_parent"
@@ -72,9 +68,9 @@
                         android:gravity="left"
                         android:enabled="true"
                         android:layout_weight="1"
-                        android:hint="enter state name"
+                        android:hint="@string/enter_state_name"
                         android:inputType="text"
-                        ></EditText>
+                        />
 
                 </LinearLayout>
             <LinearLayout
@@ -91,21 +87,21 @@
                     android:gravity="left"
                     android:layout_weight="1"
                     android:layout_gravity="center"
-                    android:text="State code:"
+                    android:text="@string/state_code"
                     android:layout_margin="10dp"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     android:textColor="@android:color/black"
-                    ></TextView>
+                    />
                 <EditText
-                    android:id="@+id/mstatec"
+                    android:id="@+id/mstatecode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:enabled="true"
                     android:layout_weight="1"
-                    android:hint="enter state name"
+                    android:hint="@string/enter_state_name"
                     android:inputType="text"
-                    ></EditText>
+                    />
             </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -125,9 +121,9 @@
                         android:layout_margin="10dp"
                         android:textSize="18dp"
                         android:textColor="@android:color/black"
-                        ></TextView>
+                        />
                     <EditText
-                        android:id="@+id/mdistrict"
+                        android:id="@+id/mdistrictname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
@@ -135,7 +131,7 @@
                         android:layout_weight="1"
                         android:hint="enter district name"
                         android:inputType="text"
-                        ></EditText>
+                        />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -151,21 +147,21 @@
                         android:gravity="left"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="District code:"
+                        android:text="@string/district_code1"
                         android:layout_margin="10dp"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textColor="@android:color/black"
-                        ></TextView>
+                        />
                     <EditText
-                        android:id="@+id/mdistrictc"
+                        android:id="@+id/mdistrictcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:enabled="true"
                         android:layout_weight="1"
-                        android:hint="enter district name"
+                        android:hint="@string/enter_district_code1"
                         android:inputType="text"
-                        ></EditText>
+                        />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -180,21 +176,21 @@
                         android:gravity="left"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Mandal"
+                        android:text="@string/mandal"
                         android:layout_margin="10dp"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textColor="@android:color/black"
-                        ></TextView>
+                        />
                     <EditText
-                        android:id="@+id/mandal"
+                        android:id="@+id/mandalname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:enabled="true"
                         android:layout_weight="1"
-                        android:hint="enter mandal name"
+                        android:hint="@string/enter_mandal_name"
                         android:inputType="text"
-                        ></EditText>
+                        />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -209,21 +205,21 @@
                         android:gravity="left"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="Mandal Code"
+                        android:text="@string/mandal_code"
                         android:layout_margin="10dp"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textColor="@android:color/black"
-                        ></TextView>
+                        />
                     <EditText
-                        android:id="@+id/mandalc"
+                        android:id="@+id/mandalcode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:enabled="true"
                         android:layout_weight="1"
-                        android:hint="enter mandal code"
+                        android:hint="@string/enter_mandal_code"
                         android:inputType="text"
-                        ></EditText>
+                        />
                 </LinearLayout>
 
                 <Button
@@ -235,7 +231,7 @@
                     android:padding="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="Register"
+                    android:text="@string/register"
                     android:textColor="@android:color/black">
                 </Button>
             </LinearLayout>

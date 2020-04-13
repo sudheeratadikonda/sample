@@ -1,6 +1,21 @@
 <resources>
     <string name="app_name">sample</string>
     <string name="spinner_title">state</string>
+    <string name="register">Register</string>
+    <string name="district_code">District Code</string>
+    <string name="enter_district_code">enter district code</string>
+    <string name="state_code">State code:</string>
+    <string name="enter_state_name">enter state name</string>
+    <string name="mandal_registration_form">Mandal Registration Form</string>
+    <string name="state">State:</string>    <string name="district_code1">District code:</string>
+    <string name="enter_district_code1">enter district Code</string>
+    <string name="mandal">Mandal</string>
+    <string name="enter_mandal_name">enter mandal name</string>
+    <string name="mandal_code">Mandal Code</string>
+    <string name="enter_mandal_code">enter mandal code</string>
+    <string name="enter_state_code">enter state code</string>
+    <string name="state_code1">State Code</string>
+    <string name="state_registration_form">State Registration Form</string>
     <string-array name="selectbranch">
         <item>CSE</item>
         <item>ECE</item>

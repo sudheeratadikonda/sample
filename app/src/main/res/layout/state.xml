@@ -6,8 +6,6 @@
     android:orientation="vertical"
     android:gravity="center">
 
-
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,8 +38,8 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:layout_gravity="center"
-                        android:text="State Registration Form"
-                        android:textSize="23dp"
+                        android:text="@string/state_registration_form"
+                        android:textSize="23sp"
                         android:textColor="@android:color/white"
 
                         />
@@ -60,11 +58,11 @@
                         android:gravity="left"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="State:"
+                        android:text="@string/state"
                         android:layout_margin="10dp"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textColor="@android:color/black"
-                        ></TextView>
+                        />
                     <EditText
                         android:id="@+id/sstate"
                         android:layout_width="match_parent"
@@ -72,9 +70,9 @@
                         android:gravity="left"
                         android:enabled="true"
                         android:layout_weight="1"
-                        android:hint="enter state name"
+                        android:hint="@string/enter_state_name"
                         android:inputType="text"
-                        ></EditText>
+                        />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -89,21 +87,21 @@
                         android:gravity="left"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:text="State Code"
+                        android:text="@string/state_code1"
                         android:layout_margin="10dp"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textColor="@android:color/black"
-                        ></TextView>
+                        />
                     <EditText
-                        android:id="@+id/statec"
+                        android:id="@+id/statecode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:enabled="true"
                         android:layout_weight="1"
-                        android:hint="enter state code"
+                        android:hint="@string/enter_state_code"
                         android:inputType="text"
-                        ></EditText>
+                        />
                 </LinearLayout>
 
                 <Button
@@ -115,7 +113,7 @@
                     android:padding="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="Register"
+                    android:text="@string/register"
                     android:textColor="@android:color/black">
                 </Button>
             </LinearLayout>

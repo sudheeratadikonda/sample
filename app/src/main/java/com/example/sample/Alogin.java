@@ -33,23 +33,18 @@ public class Alogin extends AppCompatActivity implements View.OnClickListener {
             public void onClick(View v) {
                 ld=id.getText().toString();
                 lpass=pass.getText().toString();
-                if(ld.equals("0281")&&lpass.equals("india@EC")) {
+                if(ld.equals("admin@gmail.com")&&lpass.equals("Admin@123")) {
 
                     Intent i;
                     i = new Intent(v.getContext(), Activityselect.class);
                     startActivity(i);
                     id.setText("");
                     pass.setText("");
-
                 }
                 else
                 {
-                    Toast.makeText(Alogin.this, "unauthorised admin", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Alogin.this, "Unauthorised Admin", Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
             }
         });
 
