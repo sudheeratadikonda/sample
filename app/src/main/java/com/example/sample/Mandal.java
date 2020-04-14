@@ -66,7 +66,6 @@ public class Mandal extends AppCompatActivity {
                     startActivity(intent);
                 }
 
-
                 /*boolean res = d3.mndlins(smnc, smnnm, sdstc, sdstnm, sstc, sstnm);
                 if (res == false) {
                     Toast.makeText(v.getContext(), "not inserted", Toast.LENGTH_SHORT).show();
