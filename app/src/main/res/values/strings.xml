@@ -7,7 +7,8 @@
     <string name="state_code">State code:</string>
     <string name="enter_state_name">enter state name</string>
     <string name="mandal_registration_form">Mandal Registration Form</string>
-    <string name="state">State:</string>    <string name="district_code1">District code:</string>
+    <string name="state">State:</string>
+    <string name="district_code1">District code:</string>
     <string name="enter_district_code1">enter district Code</string>
     <string name="mandal">Mandal</string>
     <string name="enter_mandal_name">enter mandal name</string>

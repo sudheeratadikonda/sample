@@ -7,8 +7,13 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:layout_gravity="center"
-    tools:context=".MainActivity"
+    tools:context=".activity.SplashActivity"
     android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_touch_app_black_24dp"/>
 
     <TextView
         android:id="@+id/vv"
@@ -18,7 +23,8 @@
         android:gravity="center"
         android:text="VOTER VERIFICATION"
         android:textColor="@android:color/black"
-        android:textSize="25dp" />
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"/>
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

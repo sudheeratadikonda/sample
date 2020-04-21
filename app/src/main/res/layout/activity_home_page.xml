@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:gravity="center"
+    tools:context=".activity.HomePageActivity">
+
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Register"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/btnUploadDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Upload Voter Details"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/btnVoter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Vote"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/btnStatistcs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Statistics"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorAccent"/>
+</LinearLayout>

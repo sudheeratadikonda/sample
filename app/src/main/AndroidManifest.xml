@@ -9,28 +9,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.UploadVoterDetailsActivity"></activity>
+        <activity android:name=".activity.AddMandalActivity" />
+        <activity android:name=".activity.AddDistrictActivity" />
+        <activity android:name=".activity.AddStateActivity" />
+        <activity android:name=".activity.RegistrationActivity" />
+        <activity android:name=".activity.HomePageActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Alogin"
-            android:label="Admin Login"
-            ></activity>
-        <activity android:name=".Activityselect"
-            android:label="Select Activity"
-            ></activity>
-        <activity android:name=".Register"
-            android:label="Register"
-            ></activity>
-        <activity android:name=".State"
-            ></activity>
-        <activity android:name=".District"
-            ></activity>
-        <activity android:name=".Mandal"
-            ></activity>
+        <activity
+            android:name=".Alogin"
+            android:label="Admin Login" />
+        <activity
+            android:name=".Activityselect"
+            android:label="Select Activity" />
+        <activity
+            android:name=".Register"
+            android:label="Register" />
+        <activity android:name=".State" />
+        <activity android:name=".District" />
+        <activity android:name=".Mandal" />
     </application>
 
 </manifest>
