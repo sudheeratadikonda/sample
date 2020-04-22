@@ -1,15 +1,25 @@
 package com.example.sample.modals;
 
 public class StateData {
+    private String stateId;
     private String state;
     private String statecode;
 
     public StateData() {
     }
 
-    public StateData(String state, String statecode) {
+    public StateData(String stateId, String state, String statecode) {
+        this.stateId = stateId;
         this.state = state;
         this.statecode = statecode;
+    }
+
+    public String getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
     }
 
     public String getState() {

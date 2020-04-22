@@ -46,8 +46,8 @@ public class District extends AppCompatActivity {
                     edtdistrictcode.setError("Please enter District Code");
                 } else {
 
-                    DistrictData district = new DistrictData(state, districtname, districtcode);
-                    myref.push().setValue(district);
+                   // DistrictData district = new DistrictData(state, districtname, districtcode);
+                   // myref.push().setValue(district);
 
                     Toast.makeText(District.this, "Record Successfully Inserted !", Toast.LENGTH_SHORT).show();
 

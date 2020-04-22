@@ -57,7 +57,7 @@ public class Mandal extends AppCompatActivity {
                     edtmandalcode.setError("Please enter Mandal Code");
                 } else {
 
-                    myref.push().setValue(new MandalData(state, statecode, district, districtcode, mandal, mandalcode));
+                   // myref.push().setValue(new MandalData(state, statecode, district, districtcode, mandal, mandalcode));
 
                     Toast.makeText(Mandal.this, "Record Inserted Successfully !", Toast.LENGTH_SHORT).show();
 

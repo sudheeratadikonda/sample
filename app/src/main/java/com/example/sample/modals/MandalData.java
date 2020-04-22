@@ -5,19 +5,29 @@ public class MandalData {
     private String statecode;
     private String district;
     private String districtcode;
+    private String mandalId;
     private String mandal;
     private String mandalcode;
 
     public MandalData() {
     }
 
-    public MandalData(String state, String statecode, String district, String districtcode, String mandal, String mandalcode) {
+    public MandalData(String state, String statecode, String district, String districtcode, String mandalId, String mandal, String mandalcode) {
         this.state = state;
         this.statecode = statecode;
         this.district = district;
         this.districtcode = districtcode;
+        this.mandalId = mandalId;
         this.mandal = mandal;
         this.mandalcode = mandalcode;
+    }
+
+    public String getMandalId() {
+        return mandalId;
+    }
+
+    public void setMandalId(String mandalId) {
+        this.mandalId = mandalId;
     }
 
     public String getState() {

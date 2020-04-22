@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class State extends AppCompatActivity {
     Button bt1;
     EditText edtstate,edtstatecode;
-    String state,statecode;
+    String stateId,stateName,statecode;
     DatabaseReference myref;
     protected void onCreate(Bundle savedinstance) {
         super.onCreate(savedinstance);
@@ -33,16 +33,20 @@ public class State extends AppCompatActivity {
         bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                state=edtstate.getText().toString();
+                stateId=myref.push().getKey();
+                stateName=edtstate.getText().toString();
                 statecode=edtstatecode.getText().toString();
 
-                if(state.isEmpty()){
+
+                if(stateName.isEmpty()){
                     edtstate.setError("Please enter State Name");
                 } else if(statecode.isEmpty()) {
                     edtstatecode.setError("Please enter State Code");
                 } else {
-                     myref.push().setValue(new StateData(state,statecode));
 
+
+                    StateData state1 = new StateData(stateId,stateName,statecode);
+                    myref.child(stateId).setValue(state1);
                     Toast.makeText(State.this, "Record Successfully Inserted !", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(State.this,Activityselect.class);

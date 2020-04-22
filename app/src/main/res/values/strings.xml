@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">sample</string>
+    <string name="app_name">Voter Verification</string>
     <string name="spinner_title">state</string>
     <string name="register">Register</string>
     <string name="district_code">District Code</string>
