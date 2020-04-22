@@ -14,6 +14,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/image"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounde_corners"
+            android:padding="5dp"
+            android:src="@drawable/ic_add_a_photo_black_24dp"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

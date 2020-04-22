@@ -42,10 +42,15 @@ public class HomePageActivity extends AppCompatActivity {
                 startActivity(new Intent(HomePageActivity.this,RegistrationActivity.class));
                 break;
             case R.id.btnUploadDetails:
+                startActivity(new Intent(HomePageActivity.this,UploadVoterDetailsActivity.class));
                 break;
             case R.id.btnVoter:
+                startActivity(new Intent(HomePageActivity.this,VoteActivity.class));
+
                 break;
             case R.id.btnStatistcs:
+                startActivity(new Intent(HomePageActivity.this,StatsticsActivity.class));
+
                 break;
         }
     }
