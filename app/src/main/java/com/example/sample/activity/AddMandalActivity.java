@@ -2,6 +2,7 @@ package com.example.sample.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -218,22 +219,36 @@ public class AddMandalActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mandalId=myref.push().getKey();
-                mandalCode= Objects.requireNonNull(etMandalCode.getText()).toString().trim();
-                mandalName= Objects.requireNonNull(etMandalName.getText()).toString().trim();
+                mandalId = myref.push().getKey();
+                mandalCode = Objects.requireNonNull(etMandalCode.getText()).toString().trim();
+                mandalName = Objects.requireNonNull(etMandalName.getText()).toString().trim();
                 stateName = spinStateName.getSelectedItem().toString();
                 stateCode = spinStateCode.getSelectedItem().toString();
-                districtCode=spinDistCode.getSelectedItem().toString();
-                districtName=spinDistName.getSelectedItem().toString();
+                districtCode = spinDistCode.getSelectedItem().toString();
+                districtName = spinDistName.getSelectedItem().toString();
 
-                MandalData mandalData = new MandalData(stateName,stateCode,districtName,districtCode,mandalId,mandalName,mandalCode);
-                myref.child(mandalId).setValue(mandalData);
+                if (stateName.isEmpty()) {
+                    Toast.makeText(AddMandalActivity.this, "Please choose State Name", Toast.LENGTH_SHORT).show();
+                } else if (stateCode.isEmpty()) {
+                    Toast.makeText(AddMandalActivity.this, "Please choose State code", Toast.LENGTH_SHORT).show();
+                } else if (districtName.isEmpty()) {
+                    Toast.makeText(AddMandalActivity.this, "Please choose District Name", Toast.LENGTH_SHORT).show();
+                } else if (districtCode.isEmpty()) {
+                    Toast.makeText(AddMandalActivity.this, "Please choose District Code", Toast.LENGTH_SHORT).show();
+                } else if(mandalName.isEmpty()) {
+                    etMandalName.setError("Please enter Mandal Name");
+                } else if(mandalCode.isEmpty()) {
+                    etMandalCode.setError("Please enter Mandal Code");
+                }else {
+                    MandalData mandalData = new MandalData(stateName, stateCode, districtName, districtCode, mandalId, mandalName, mandalCode);
+                    myref.child(mandalId).setValue(mandalData);
 
-                Toast.makeText(AddMandalActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMandalActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(AddMandalActivity.this,RegistrationActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                    Intent intent = new Intent(AddMandalActivity.this, RegistrationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
             }
         });
 

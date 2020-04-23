@@ -1,16 +1,29 @@
 package com.example.sample.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.sample.R;
+import com.example.sample.modals.VoterData;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -36,6 +49,9 @@ public class VoteActivity extends AppCompatActivity {
     TextView txtDistrict;
     @BindView(R.id.txtState)
     TextView txtState;
+    DatabaseReference myref;
+    String voterId,imgUrl,name,mandal,district,state;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +61,51 @@ public class VoteActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Voter");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        getUserDetails();
+        myref= FirebaseDatabase.getInstance().getReference("Voter_Details");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voterId = etSearch.getText().toString().trim();
+                if (voterId.isEmpty()) {
+                    etSearch.setError("Please enter Voter ID");
+                } else {
+                    progressDialog.show();
+
+                    Query query = myref.orderByChild("voterID").equalTo(voterId);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                    imgUrl = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getImageUrl();
+                                    name = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterName();
+                                    mandal = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterMandal();
+                                    district = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterDistrict();
+                                    state = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterState();
+                                }
+                                getUserDetails();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(VoteActivity.this, "No Voter Found !!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(VoteActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+
+
+
 
     }
 
@@ -63,10 +123,12 @@ public class VoteActivity extends AppCompatActivity {
     }
 
     void getUserDetails(){
-        txtId.setText("VoterId : Vote3245");
-        txtName.setText("Name : Suresh");
-        txtMandal.setText("Mandal : Kotturu");
-        txtDistrict.setText("District : Vizag");
-        txtState.setText("State : Ap");
+        Glide.with(this).load(imgUrl).into(image);
+        txtId.setText("Voter ID: " +voterId);
+        txtName.setText("Name: " + name);
+        txtMandal.setText("Mandal: "+ mandal);
+        txtDistrict.setText("District: "+ district);
+        txtState.setText("State: " + state);
+        progressDialog.dismiss();
     }
 }

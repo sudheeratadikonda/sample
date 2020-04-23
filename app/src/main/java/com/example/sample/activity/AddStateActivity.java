@@ -50,18 +50,24 @@ public class AddStateActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                stateName=etStateName.getText().toString().trim();
-                stateCode=etStateCode.getText().toString();
-                stateId=myref.push().getKey();
+                stateName = Objects.requireNonNull(etStateName.getText()).toString().trim();
+                stateCode = Objects.requireNonNull(etStateCode.getText()).toString();
+                stateId = myref.push().getKey();
+                if (stateName.isEmpty()) {
+                    etStateName.setError("Please enter State Name");
+                } else if (stateCode.isEmpty()) {
+                    etStateCode.setError("Please enter State code");
+                } else {
 
-                StateData stateData = new StateData(stateId,stateName,stateCode);
-                myref.child(stateId).setValue(stateData);
+                    StateData stateData = new StateData(stateId, stateName, stateCode);
+                    myref.child(stateId).setValue(stateData);
 
-                Toast.makeText(AddStateActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddStateActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(AddStateActivity.this, RegistrationActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                    Intent intent = new Intent(AddStateActivity.this, RegistrationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
             }
         });
 

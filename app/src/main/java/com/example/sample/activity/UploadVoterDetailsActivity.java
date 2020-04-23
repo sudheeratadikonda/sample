@@ -2,8 +2,10 @@ package com.example.sample.activity;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,8 +13,13 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,7 +32,24 @@ import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.sample.BuildConfig;
+import com.example.sample.modals.DistrictData;
+import com.example.sample.modals.MandalData;
+import com.example.sample.modals.StateData;
+import com.example.sample.modals.VoterData;
 import com.example.sample.utilities.FileCompressor;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -34,6 +58,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -63,20 +88,30 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     TextInputEditText etStreet;
     @BindView(R.id.etPlace)
     TextInputEditText etPlace;
-    @BindView(R.id.etDistrict)
-    TextInputEditText etDistrict;
-    @BindView(R.id.etState)
-    TextInputEditText etState;
+    @BindView(R.id.spinStateName)
+    Spinner spinStateName;
+    @BindView(R.id.spinDistName)
+    Spinner spinDistName;
+    @BindView(R.id.spinMandalName)
+    Spinner spinMandalName;
     @BindView(R.id.etLandmark)
     TextInputEditText etLandmark;
     @BindView(R.id.etEmail)
     TextInputEditText etEmail;
     @BindView(R.id.etMobile)
     TextInputEditText etMobile;
-    @BindView(R.id.etGender)
-    TextInputEditText etGender;
+    @BindView(R.id.radioGender)
+    RadioGroup radioGender;
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
+    RadioButton radioButton;
+    DatabaseReference voterRef,myref,databaseReference,databaseReference1;
+    ArrayList<String> stateNameList,districtNameList,mandalNameList;
+    ProgressDialog progressDialog,regProgress;
+    StorageReference storageReference;
+    Uri selectedImage;
+    String voterId,voterName,voterGender,voterDoB,voterState,voterDistrict,voterMandal,voterDrno,voterLane,voterStreet,voterPlace,voterLandmark,voterEmail,voterMobile,photoUrl;
+    Bitmap photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +122,243 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         mCompressor = new FileCompressor(this);
+
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Fetching Data...");
+        progressDialog.show();
+
+        regProgress=new ProgressDialog(this);
+
+        voterRef = FirebaseDatabase.getInstance().getReference().child("Voter_Details");
+
+
+        stateNameList=new ArrayList<String>();
+        districtNameList=new ArrayList<String>();
+        mandalNameList=new ArrayList<String>();
+
+        myref = FirebaseDatabase.getInstance().getReference("State_Details");
+        databaseReference=FirebaseDatabase.getInstance().getReference("District_Details");
+        databaseReference1=FirebaseDatabase.getInstance().getReference("Mandal_Details");
+
+        myref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
+                        stateNameList.add(stateName);
+                    }
+
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this,R.layout.support_simple_spinner_dropdown_item, stateNameList);
+                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    spinStateName.setAdapter(arrayAdapter);
+
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(UploadVoterDetailsActivity.this, "No data Found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String selectedState = spinStateName.getSelectedItem().toString();
+
+                //Retrieving District Names based on State Selected
+                Query query1 = databaseReference.orderByChild("state").equalTo(selectedState);
+                query1.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()) {
+                            districtNameList.clear();
+                            for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
+                                districtNameList.add(districtName);
+                            }
+
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this,R.layout.support_simple_spinner_dropdown_item, districtNameList);
+                            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                            spinDistName.setAdapter(arrayAdapter);
+
+                        } else {
+                            districtNameList.clear();
+                            progressDialog.dismiss();
+                            Toast.makeText(UploadVoterDetailsActivity.this, "No data Found", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                //Retrieving Mandal Name as per District Name
+                spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        mandalNameList.clear();
+                        String selectedDistrict = spinDistName.getSelectedItem().toString();
+
+                        Query query = databaseReference1.orderByChild("district").equalTo(selectedDistrict);
+                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()) {
+                                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+                                        String mandalName = Objects.requireNonNull(dataSnapshot1.getValue(MandalData.class)).getMandal();
+                                        mandalNameList.add(mandalName);
+                                    }
+                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this,R.layout.support_simple_spinner_dropdown_item, mandalNameList);
+                                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                                    spinMandalName.setAdapter(arrayAdapter);
+                                    progressDialog.dismiss();
+                                }
+                                else{
+                                    progressDialog.dismiss();
+                                    Toast.makeText(UploadVoterDetailsActivity.this, "No Data Found !", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedImage==null) {
+                    Toast.makeText(UploadVoterDetailsActivity.this, "Please select Image", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    String imgId = voterRef.push().getKey();
+                    int selctedId = radioGender.getCheckedRadioButtonId();
+                    radioButton = (RadioButton) findViewById(selctedId);
+
+                    voterId = Objects.requireNonNull(etVoterId.getText()).toString().trim();
+                    voterName = Objects.requireNonNull(etVoterName.getText()).toString().trim();
+                    voterGender = radioButton.getText().toString();
+                    voterDoB = Objects.requireNonNull(etDob.getText()).toString().trim();
+                    voterState = spinStateName.getSelectedItem().toString();
+                    voterDistrict = spinDistName.getSelectedItem().toString();
+                    voterMandal = spinMandalName.getSelectedItem().toString();
+                    voterDrno = Objects.requireNonNull(etDrNo.getText()).toString().trim();
+                    voterLane = Objects.requireNonNull(etLane.getText()).toString().trim();
+                    voterStreet = Objects.requireNonNull(etStreet.getText()).toString().trim();
+                    voterPlace = Objects.requireNonNull(etPlace.getText()).toString().trim();
+                    voterLandmark = Objects.requireNonNull(etLandmark.getText()).toString().trim();
+                    voterEmail = Objects.requireNonNull(etEmail.getText()).toString().trim();
+                    voterMobile = Objects.requireNonNull(etMobile.getText()).toString().trim();
+                    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                    if (voterId.isEmpty()) {
+                        etVoterId.setError("Please enter Voter ID");
+                    } else if(voterName.isEmpty()) {
+                        etVoterName.setError("Please enter Voter Name");
+                    } else if(voterGender.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please choose Gender", Toast.LENGTH_SHORT).show();
+                    } else if(voterDoB.isEmpty()) {
+                        etDob.setError("Please enter DOB");
+                    } else if(voterDrno.isEmpty()) {
+                        etDrNo.setError("Please enter Door No");
+                    }  else if(voterLane.isEmpty()) {
+                        etLane.setError("Please enter Lane ");
+                    } else if(voterStreet.isEmpty()) {
+                        etStreet.setError("Please enter Street");
+                    } else if(voterPlace.isEmpty()) {
+                        etPlace.setError("Please enter Place");
+                    } else if(voterLandmark.isEmpty()) {
+                        etLandmark.setError("Please enter Landmark");
+                    } else if(voterEmail.isEmpty()) {
+                        etEmail.setError("Please enter Email ID");
+                    } else if(emailPattern.matches(voterEmail)) {
+                         etEmail.setError("Please enter Valid Email ID");
+                    }
+                    else if(voterMobile.length()!=10) {
+                        etMobile.setError("Please enter Valid Mobile Number");
+                    }
+                    else {
+
+                        StorageReference ref = storageReference.child("Images/" + imgId);
+                        ref.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                while (!uriTask.isSuccessful()) ;
+                                Uri downloadUrl = uriTask.getResult();
+                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile);
+                                voterRef.child(imgId).setValue(voterData);
+                                Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
+                                regProgress.dismiss();
+
+                                Intent intent = new Intent(UploadVoterDetailsActivity.this, RegistrationActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                regProgress.dismiss();
+                                Toast.makeText(UploadVoterDetailsActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                                regProgress.show();
+                                regProgress.setCanceledOnTouchOutside(false);
+                                regProgress.setCancelable(false);
+
+                                double progress
+                                        = (100.0
+                                        * taskSnapshot.getBytesTransferred()
+                                        / taskSnapshot.getTotalByteCount());
+                                regProgress.setMessage(
+                                        "Uploaded "
+                                                + (int) progress + "%");
+                            }
+                        });
+                    }
+                }
+
+            }
+        });
+
+
+
+
+
+
 
 
 
@@ -176,7 +448,11 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 try {
+                    photo = (Bitmap) data.getExtras().get("data");
                     mPhotoFile = mCompressor.compressToFile(mPhotoFile);
+                    selectedImage = data.getData();
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -187,8 +463,8 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 .placeholder(R.drawable.ic_add_a_photo_black_24dp))
                         .into(image);
             } else if (requestCode == REQUEST_GALLERY_PHOTO) {
-                Uri selectedImage = data.getData();
                 try {
+                    selectedImage = data.getData();
                     mPhotoFile = mCompressor.compressToFile(new File(getRealPathFromUri(selectedImage)));
                 } catch (IOException e) {
                     e.printStackTrace();

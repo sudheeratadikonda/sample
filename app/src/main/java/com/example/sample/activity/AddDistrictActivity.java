@@ -57,6 +57,11 @@ public class AddDistrictActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Add District");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+/*
+        -Add Gender Radio Button
+                -Add Spinners
+                -Send Images to Firebase
+                -Retrieve Image from Firebase as per Voter ID*/
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Fetching Data...");
@@ -144,16 +149,26 @@ public class AddDistrictActivity extends AppCompatActivity {
                 stateName=spinStateName.getSelectedItem().toString();
                 stateCode=spinStateCode.getSelectedItem().toString();
 
-                distId=myref.push().getKey();
+                 if(stateName.isEmpty()) {
+                    Toast.makeText(AddDistrictActivity.this, "Please choose State Name", Toast.LENGTH_SHORT).show();
+                } else if(stateCode.isEmpty()) {
+                    Toast.makeText(AddDistrictActivity.this, "Please choose State code", Toast.LENGTH_SHORT).show();
+                } else if(distName.isEmpty()) {
+                    etDistName.setError("Please enter District Name");
+                } else if(distCode.isEmpty()) {
+                    etDistCode.setError("Please enter District Code ");
+                }else {
+                    distId = myref.push().getKey();
 
-                DistrictData districtData = new DistrictData(stateName,stateCode,distId,distName,distCode);
-                myref.child(distId).setValue(districtData);
+                    DistrictData districtData = new DistrictData(stateName, stateCode, distId, distName, distCode);
+                    myref.child(distId).setValue(districtData);
 
-                Toast.makeText(AddDistrictActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddDistrictActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(AddDistrictActivity.this,RegistrationActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                    Intent intent = new Intent(AddDistrictActivity.this, RegistrationActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
 
             }
         });
