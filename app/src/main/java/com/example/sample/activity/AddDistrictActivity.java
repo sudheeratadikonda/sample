@@ -45,9 +45,9 @@ public class AddDistrictActivity extends AppCompatActivity {
     TextInputEditText etDistCode;
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
-    DatabaseReference myref,databaseReference;
-    String distId,distName,distCode,stateCode,stateName;
-    List<String> stateList,stateCodeList;
+    DatabaseReference myref, databaseReference;
+    String distId, distName, distCode, stateCode, stateName;
+    List<String> stateList, stateCodeList;
     ProgressDialog progressDialog;
 
     @Override
@@ -57,12 +57,6 @@ public class AddDistrictActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Add District");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-/*
-        -Add Gender Radio Button
-                -Add Spinners
-                -Send Images to Firebase
-                -Retrieve Image from Firebase as per Voter ID*/
-
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Fetching Data...");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -70,27 +64,74 @@ public class AddDistrictActivity extends AppCompatActivity {
         progressDialog.show();
 
         myref = FirebaseDatabase.getInstance().getReference().child("District_Details");
-        databaseReference=FirebaseDatabase.getInstance().getReference("State_Details");
+        databaseReference = FirebaseDatabase.getInstance().getReference("State_Details");
 
         stateList = new ArrayList<String>();
-        stateCodeList=new ArrayList<String>();
+        stateList.add("Select State Name");
+        stateCodeList = new ArrayList<String>();
+        stateCodeList.add("Select State Code");
 
         // Retrieving State Name
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                if (dataSnapshot.exists()) {
+                    stateCodeList.add("Select State Code");
+                    stateList.clear();
+                    stateList.add("Select State Name");
+                    
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
                         stateList.add(stateName);
                     }
 
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddDistrictActivity.this,R.layout.support_simple_spinner_dropdown_item, stateList);
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddDistrictActivity.this, R.layout.support_simple_spinner_dropdown_item, stateList);
                     arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinStateName.setAdapter(arrayAdapter);
 
-                } else {
-                    Toast.makeText(AddDistrictActivity.this, "No data Found", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    //Retrieving State Code as per State Name
+
+                    spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            String selectedState = spinStateName.getSelectedItem().toString();
+
+                            Query query = databaseReference.orderByChild("state").equalTo(selectedState);
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        stateCodeList.clear();
+                                        stateCodeList.add("Select State Code");
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
+                                            stateCodeList.add(stateCode);
+                                        }
+                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddDistrictActivity.this, R.layout.support_simple_spinner_dropdown_item, stateCodeList);
+                                        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                                        spinStateCode.setAdapter(arrayAdapter);
+                                        progressDialog.dismiss();
+                                    } else {
+                                        stateCodeList.clear();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
                 }
             }
 
@@ -100,74 +141,58 @@ public class AddDistrictActivity extends AppCompatActivity {
             }
         });
 
-        //Retrieving State Code as per State Name
-        spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                stateCodeList.clear();
-                String selectedState = spinStateName.getSelectedItem().toString();
 
-                Query query = databaseReference.orderByChild("state").equalTo(selectedState);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
-                                String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
-                                stateCodeList.add(stateCode);
-                            }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddDistrictActivity.this,R.layout.support_simple_spinner_dropdown_item, stateCodeList);
-                            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                            spinStateCode.setAdapter(arrayAdapter);
-                            progressDialog.dismiss();
-                        }
-                        else{
-                            Toast.makeText(AddDistrictActivity.this, "No Data Found !", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                distName= Objects.requireNonNull(etDistName.getText()).toString().trim();
-                distCode= Objects.requireNonNull(etDistCode.getText()).toString().trim();
-                stateName=spinStateName.getSelectedItem().toString();
-                stateCode=spinStateCode.getSelectedItem().toString();
+                distId = myref.push().getKey();
+                distName = Objects.requireNonNull(etDistName.getText()).toString().trim();
+                distCode = Objects.requireNonNull(etDistCode.getText()).toString().trim();
+                stateName = spinStateName.getSelectedItem().toString();
+                stateCode = spinStateCode.getSelectedItem().toString();
 
-                 if(stateName.isEmpty()) {
-                    Toast.makeText(AddDistrictActivity.this, "Please choose State Name", Toast.LENGTH_SHORT).show();
-                } else if(stateCode.isEmpty()) {
-                    Toast.makeText(AddDistrictActivity.this, "Please choose State code", Toast.LENGTH_SHORT).show();
-                } else if(distName.isEmpty()) {
-                    etDistName.setError("Please enter District Name");
-                } else if(distCode.isEmpty()) {
-                    etDistCode.setError("Please enter District Code ");
-                }else {
-                    distId = myref.push().getKey();
+                if (stateName.isEmpty()) {
+                    Toast.makeText(AddDistrictActivity.this, "Please Select State Name", Toast.LENGTH_SHORT).show();
+                } else if (stateCode.isEmpty()) {
+                    Toast.makeText(AddDistrictActivity.this, "Please Select State code", Toast.LENGTH_SHORT).show();
+                } else if (distName.isEmpty()) {
+                    Toast.makeText(AddDistrictActivity.this, "Please enter District Name", Toast.LENGTH_SHORT).show();
+                } else if (distCode.isEmpty()) {
+                    Toast.makeText(AddDistrictActivity.this, "Please enter District Code ", Toast.LENGTH_SHORT).show();
+                } else {
 
-                    DistrictData districtData = new DistrictData(stateName, stateCode, distId, distName, distCode);
-                    myref.child(distId).setValue(districtData);
+                    myref.child(distName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue() != null) {
+                                //user exists, do something
+                                Toast.makeText(AddDistrictActivity.this, "Already District Name Exists", Toast.LENGTH_SHORT).show();
+                            } else {
+                                DistrictData districtData = new DistrictData(stateName, stateCode, distId, distName, distCode);
+                                myref.child(distName).setValue(districtData);
+                                spinStateName.setSelection(0);
+                                spinStateCode.setSelection(0);
+                                etDistName.setText("");
+                                etDistCode.setText("");
 
-                    Toast.makeText(AddDistrictActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddDistrictActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(AddDistrictActivity.this, RegistrationActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+
+                    });
+
+
+
                 }
 
             }
@@ -186,7 +211,4 @@ public class AddDistrictActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.btnSubmit)
-    public void onViewClicked() {
-    }
 }

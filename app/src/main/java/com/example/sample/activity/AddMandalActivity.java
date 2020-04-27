@@ -51,9 +51,9 @@ public class AddMandalActivity extends AppCompatActivity {
     TextInputEditText etMandalCode;
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
-    DatabaseReference myref,databaseReference,databaseReference1;
-    String mandalName,mandalCode,mandalId,stateName,stateCode,districtName,districtCode;
-    ArrayList<String> stateList,stateCodeList,districtList,districtCodeList;
+    DatabaseReference myref, databaseReference, databaseReference1;
+    String mandalName, mandalCode, mandalId, stateName, stateCode, districtName, districtCode;
+    ArrayList<String> stateList, stateCodeList, districtList, districtCodeList;
     ProgressDialog progressDialog;
 
     @Override
@@ -71,30 +71,138 @@ public class AddMandalActivity extends AppCompatActivity {
         progressDialog.show();
 
         stateList = new ArrayList<String>();
+        stateList.add("Select State Name");
         stateCodeList = new ArrayList<String>();
+        stateCodeList.add("Select State Code");
         districtList = new ArrayList<>();
+        districtList.add("Select District Name");
         districtCodeList = new ArrayList<>();
+        districtCodeList.add("Select District Code");
 
         myref = FirebaseDatabase.getInstance().getReference().child("Mandal_Details");
         databaseReference = FirebaseDatabase.getInstance().getReference("State_Details");
-        databaseReference1=FirebaseDatabase.getInstance().getReference("District_Details");
+        databaseReference1 = FirebaseDatabase.getInstance().getReference("District_Details");
 
         // Retrieving State Name
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                if (dataSnapshot.exists()) {
+                    stateList.clear();
+                    stateList.add("Select State Name");
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
                         stateList.add(stateName);
                     }
 
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this,R.layout.support_simple_spinner_dropdown_item, stateList);
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, stateList);
                     arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinStateName.setAdapter(arrayAdapter);
+                    progressDialog.dismiss();
+                    //Retrieving State Code as per State Name
+                    spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                } else {
-                    Toast.makeText(AddMandalActivity.this, "No data Found", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            String selectedState = spinStateName.getSelectedItem().toString();
+
+                            Query query = databaseReference.orderByChild("state").equalTo(selectedState);
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        stateCodeList.clear();
+                                        stateCodeList.add("Select State Code");
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
+                                            stateCodeList.add(stateCode);
+                                        }
+                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, stateCodeList);
+                                        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                                        spinStateCode.setAdapter(arrayAdapter);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            //Retrieving District Names based on State Selected
+                            Query query1 = databaseReference1.orderByChild("state").equalTo(selectedState);
+                            query1.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        districtList.clear();
+                                        districtList.add("Select District Name");
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
+                                            districtList.add(districtName);
+                                        }
+
+                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, districtList);
+                                        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                                        spinDistName.setAdapter(arrayAdapter);
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            //Retrieving District Code as per District Name
+                            spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                                @Override
+                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                                    String selectedDistrict = spinDistName.getSelectedItem().toString();
+
+                                    Query query = databaseReference1.orderByChild("districtname").equalTo(selectedDistrict);
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            if (dataSnapshot.exists()) {
+                                                districtCodeList.clear();
+                                                districtCodeList.add("Select District Code");
+                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                                    String districtCode = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictcode();
+                                                    districtCodeList.add(districtCode);
+                                                }
+                                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, districtCodeList);
+                                                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                                                spinDistCode.setAdapter(arrayAdapter);
+                                                progressDialog.dismiss();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onNothingSelected(AdapterView<?> parent) {
+
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+
                 }
             }
 
@@ -103,117 +211,6 @@ public class AddMandalActivity extends AppCompatActivity {
 
             }
         });
-
-        //Retrieving State Code as per State Name
-        spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                stateCodeList.clear();
-                String selectedState = spinStateName.getSelectedItem().toString();
-
-                Query query = databaseReference.orderByChild("state").equalTo(selectedState);
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
-                                String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
-                                stateCodeList.add(stateCode);
-                            }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this,R.layout.support_simple_spinner_dropdown_item, stateCodeList);
-                            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                            spinStateCode.setAdapter(arrayAdapter);
-                        }
-                        else{
-                            Toast.makeText(AddMandalActivity.this, "No Data Found !", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                //Retrieving District Names based on State Selected
-                Query query1 = databaseReference1.orderByChild("state").equalTo(selectedState);
-                query1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            districtList.clear();
-                            for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
-                                districtList.add(districtName);
-                            }
-
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this,R.layout.support_simple_spinner_dropdown_item, districtList);
-                            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                            spinDistName.setAdapter(arrayAdapter);
-
-                        } else {
-                            districtList.clear();
-                            districtCodeList.clear();
-                            Toast.makeText(AddMandalActivity.this, "No data Found", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                //Retrieving District Code as per District Name
-                spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        districtCodeList.clear();
-                        String selectedDistrict = spinDistName.getSelectedItem().toString();
-
-                        Query query = databaseReference1.orderByChild("districtname").equalTo(selectedDistrict);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()) {
-                                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
-                                        String districtCode = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictcode();
-                                        districtCodeList.add(districtCode);
-                                    }
-                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this,R.layout.support_simple_spinner_dropdown_item, districtCodeList);
-                                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                                    spinDistCode.setAdapter(arrayAdapter);
-                                    progressDialog.dismiss();
-                                }
-                                else{
-
-                                    Toast.makeText(AddMandalActivity.this, "No Data Found !", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -235,19 +232,46 @@ public class AddMandalActivity extends AppCompatActivity {
                     Toast.makeText(AddMandalActivity.this, "Please choose District Name", Toast.LENGTH_SHORT).show();
                 } else if (districtCode.isEmpty()) {
                     Toast.makeText(AddMandalActivity.this, "Please choose District Code", Toast.LENGTH_SHORT).show();
-                } else if(mandalName.isEmpty()) {
-                    etMandalName.setError("Please enter Mandal Name");
-                } else if(mandalCode.isEmpty()) {
-                    etMandalCode.setError("Please enter Mandal Code");
-                }else {
-                    MandalData mandalData = new MandalData(stateName, stateCode, districtName, districtCode, mandalId, mandalName, mandalCode);
-                    myref.child(mandalId).setValue(mandalData);
+                } else if (mandalName.isEmpty()) {
 
-                    Toast.makeText(AddMandalActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddMandalActivity.this, "Please enter Mandal Name", Toast.LENGTH_SHORT).show();
+                } else if (mandalCode.isEmpty()) {
 
-                    Intent intent = new Intent(AddMandalActivity.this, RegistrationActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    Toast.makeText(AddMandalActivity.this, "Please enter Mandal Code", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    myref.child(mandalName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue() != null) {
+                                //user exists, do something
+                                Toast.makeText(AddMandalActivity.this, "Already Mandal Name Exists", Toast.LENGTH_SHORT).show();
+                            } else {
+                                MandalData mandalData = new MandalData(stateName, stateCode, districtName, districtCode, mandalId, mandalName, mandalCode);
+                                myref.child(mandalName).setValue(mandalData);
+
+                                Toast.makeText(AddMandalActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+
+                                spinStateName.setSelection(0);
+                                spinStateCode.setSelection(0);
+                                spinDistName.setSelection(0);
+                                spinDistCode.setSelection(0);
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+
+                    });
+
+
+
+
+
                 }
             }
         });
@@ -264,7 +288,5 @@ public class AddMandalActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.btnSubmit)
-    public void onViewClicked() {
-    }
+
 }

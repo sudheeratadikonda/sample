@@ -35,8 +35,28 @@ public class RegistrationActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
+    }
 
 
+    @OnClick({R.id.btnState, R.id.btnDistrict, R.id.btnMandal})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnState:
+                Intent intent = new Intent(RegistrationActivity.this, AddStateActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                break;
+            case R.id.btnDistrict:
+                Intent intent1 = new Intent(RegistrationActivity.this, AddDistrictActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent1);
+                break;
+            case R.id.btnMandal:
+                Intent intent2 = new Intent(RegistrationActivity.this, AddMandalActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent2);
+                break;
+        }
     }
 
     @Override
@@ -46,21 +66,5 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @OnClick({R.id.btnState, R.id.btnDistrict, R.id.btnMandal})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btnState:
-                startActivity(new Intent(RegistrationActivity.this,AddStateActivity.class));
-                break;
-            case R.id.btnDistrict:
-                startActivity(new Intent(RegistrationActivity.this,AddDistrictActivity.class));
-                break;
-            case R.id.btnMandal:
-                startActivity(new Intent(RegistrationActivity.this,AddMandalActivity.class));
-                break;
-        }
     }
 }

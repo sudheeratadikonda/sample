@@ -14,7 +14,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StatsticsActivity extends AppCompatActivity {
+public class StatisticsActivity extends AppCompatActivity {
 
     @BindView(R.id.txtTotalVotes)
     TextView txtTotalVotes;

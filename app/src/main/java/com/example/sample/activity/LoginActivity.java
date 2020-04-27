@@ -12,11 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.sample.R;
+import com.example.sample.utilities.ConstantValues;
+import com.example.sample.utilities.MyAppPrefsManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +36,7 @@ public class LoginActivity extends Activity {
     Button btnLogin;
     FirebaseAuth mAuth;
     ProgressDialog progressDialog;
-
+    MyAppPrefsManager myAppPrefsManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class LoginActivity extends Activity {
         ButterKnife.bind(this);
 
         mAuth=FirebaseAuth.getInstance();
+        myAppPrefsManager=new MyAppPrefsManager(LoginActivity.this);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Logging in...");
         progressDialog.setCancelable(false);
@@ -48,8 +53,8 @@ public class LoginActivity extends Activity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = etEmail.getText().toString().trim();
-                String pwd = etPassword.getText().toString().trim();
+                String email = Objects.requireNonNull(etEmail.getText()).toString().trim();
+                String pwd = Objects.requireNonNull(etPassword.getText()).toString().trim();
 
                 if(email.isEmpty()) {
                     etEmail.setError("Please enter Email ID");
@@ -69,10 +74,13 @@ public class LoginActivity extends Activity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     progressDialog.dismiss();
+                    myAppPrefsManager.setAdminLoggedIn(true);
+                    ConstantValues.IS_USER_LOGGED_IN_ADMIN = myAppPrefsManager.isAdminLoggedIn();
                     Toast.makeText(LoginActivity.this, "Success", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this,HomePageActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    
                 } else {
                     progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
@@ -81,8 +89,5 @@ public class LoginActivity extends Activity {
         });
     }
 
-    @OnClick(R.id.btnLogin)
-    public void onViewClicked() {
-        startActivity(new Intent(LoginActivity.this,HomePageActivity.class));
-    }
+
 }

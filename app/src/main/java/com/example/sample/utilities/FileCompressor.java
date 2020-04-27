@@ -1,10 +1,12 @@
 package com.example.sample.utilities;
 import android.content.Context;
 import android.graphics.Bitmap;
-import io.reactivex.Flowable;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.Callable;
+
+import io.reactivex.Flowable;
+
 public class FileCompressor {
     //max width and height values of the compressed image is taken as 612x816
     private int maxWidth = 612;

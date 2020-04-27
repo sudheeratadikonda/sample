@@ -15,8 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.sample.R;
 import com.example.sample.modals.StateData;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.FirebaseError;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -33,7 +37,7 @@ public class AddStateActivity extends AppCompatActivity {
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
     DatabaseReference myref;
-    String stateId,stateName,stateCode;
+    String stateId, stateName, stateCode;
 
 
     @Override
@@ -54,31 +58,42 @@ public class AddStateActivity extends AppCompatActivity {
                 stateCode = Objects.requireNonNull(etStateCode.getText()).toString();
                 stateId = myref.push().getKey();
                 if (stateName.isEmpty()) {
-                    etStateName.setError("Please enter State Name");
+                    Toast.makeText(AddStateActivity.this, "Enter State Name", Toast.LENGTH_SHORT).show();
                 } else if (stateCode.isEmpty()) {
-                    etStateCode.setError("Please enter State code");
+                    Toast.makeText(AddStateActivity.this, "Enter State Code", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    StateData stateData = new StateData(stateId, stateName, stateCode);
-                    myref.child(stateId).setValue(stateData);
+                    myref.child(stateName).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.getValue() != null) {
+                                //user exists, do something
+                                Toast.makeText(AddStateActivity.this, "Already State Name Exists", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //user does not exist, do something else
+                                StateData stateData = new StateData(stateId, stateName, stateCode);
+                                myref.child(stateName).setValue(stateData);
+                                etStateCode.setText("");
+                                etStateName.setText("");
+                                Toast.makeText(AddStateActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
 
-                    Toast.makeText(AddStateActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
+                            }
+                        }
 
-                    Intent intent = new Intent(AddStateActivity.this, RegistrationActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+
+                    });
+
                 }
             }
         });
 
 
-
-
     }
 
-    @OnClick(R.id.btnSubmit)
-    public void onViewClicked() {
-    }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

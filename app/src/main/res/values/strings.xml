@@ -17,6 +17,7 @@
     <string name="enter_state_code">enter state code</string>
     <string name="state_code1">State Code</string>
     <string name="state_registration_form">State Registration Form</string>
+    <string name="logout">Logout</string>
     <string-array name="selectbranch">
         <item>CSE</item>
         <item>ECE</item>
