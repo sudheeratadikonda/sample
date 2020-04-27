@@ -137,8 +137,11 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
 
 
         stateNameList=new ArrayList<String>();
+        stateNameList.add("Select State Name");
         districtNameList=new ArrayList<String>();
+        districtNameList.add("Select District Name");
         mandalNameList=new ArrayList<String>();
+        mandalNameList.add("Select Mandal Name");
 
         myref = FirebaseDatabase.getInstance().getReference("State_Details");
         databaseReference=FirebaseDatabase.getInstance().getReference("District_Details");
@@ -183,6 +186,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()) {
                             districtNameList.clear();
+                            districtNameList.add("Select District Name");
                             for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
                                 districtNameList.add(districtName);
@@ -211,6 +215,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         mandalNameList.clear();
+                        mandalNameList.add("Select Mandal Name");
                         String selectedDistrict = spinDistName.getSelectedItem().toString();
 
                         Query query = databaseReference1.orderByChild("district").equalTo(selectedDistrict);
@@ -316,13 +321,13 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                                 while (!uriTask.isSuccessful()) ;
                                 Uri downloadUrl = uriTask.getResult();
-                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile);
+                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile,"No");
                                 voterRef.child(imgId).setValue(voterData);
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
                                 regProgress.dismiss();
 
-                                Intent intent = new Intent(UploadVoterDetailsActivity.this, RegistrationActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Intent intent = new Intent(UploadVoterDetailsActivity.this, HomePageActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
 
                             }
@@ -448,7 +453,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 try {
-                    photo = (Bitmap) data.getExtras().get("data");
+                    //photo = (Bitmap) data.getExtras().get("data");
                     mPhotoFile = mCompressor.compressToFile(mPhotoFile);
                     selectedImage = data.getData();
 

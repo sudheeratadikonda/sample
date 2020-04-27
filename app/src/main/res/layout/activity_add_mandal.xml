@@ -16,29 +16,60 @@
         android:layout_height="wrap_content"
         android:spinnerMode="dialog" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
 
-    <Spinner
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etStateCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="State Code"
+            android:focusable="false"
+            android:inputType="textCapWords" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+   <!-- <Spinner
         android:id="@+id/spinStateCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog" />-->
 
     <Spinner
         android:id="@+id/spinDistName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog"
+        />
 
 
-    <Spinner
+    <!--<Spinner
         android:id="@+id/spinDistCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog" />-->
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDistCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Dist Code"
+            android:focusable="false"
+            android:inputType="textCapWords" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"

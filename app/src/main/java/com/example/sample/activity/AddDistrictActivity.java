@@ -1,7 +1,6 @@
 package com.example.sample.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,14 +30,13 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class AddDistrictActivity extends AppCompatActivity {
 
     @BindView(R.id.spinStateName)
     Spinner spinStateName;
-    @BindView(R.id.spinStateCode)
-    Spinner spinStateCode;
+    /*@BindView(R.id.spinStateCode)
+    Spinner spinStateCode;*/
     @BindView(R.id.etDistName)
     TextInputEditText etDistName;
     @BindView(R.id.etDistCode)
@@ -49,6 +47,8 @@ public class AddDistrictActivity extends AppCompatActivity {
     String distId, distName, distCode, stateCode, stateName;
     List<String> stateList, stateCodeList;
     ProgressDialog progressDialog;
+    @BindView(R.id.etStateCode)
+    TextInputEditText etStateCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class AddDistrictActivity extends AppCompatActivity {
                     stateCodeList.add("Select State Code");
                     stateList.clear();
                     stateList.add("Select State Name");
-                    
+
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
                         stateList.add(stateName);
@@ -108,11 +108,13 @@ public class AddDistrictActivity extends AppCompatActivity {
                                         stateCodeList.add("Select State Code");
                                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                             String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
-                                            stateCodeList.add(stateCode);
+
+                                            etStateCode.setText(stateCode);
+                                            // stateCodeList.add(stateCode);
                                         }
-                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddDistrictActivity.this, R.layout.support_simple_spinner_dropdown_item, stateCodeList);
+                                       /* ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddDistrictActivity.this, R.layout.support_simple_spinner_dropdown_item, stateCodeList);
                                         arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                                        spinStateCode.setAdapter(arrayAdapter);
+                                        spinStateCode.setAdapter(arrayAdapter);*/
                                         progressDialog.dismiss();
                                     } else {
                                         stateCodeList.clear();
@@ -142,10 +144,6 @@ public class AddDistrictActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,7 +151,7 @@ public class AddDistrictActivity extends AppCompatActivity {
                 distName = Objects.requireNonNull(etDistName.getText()).toString().trim();
                 distCode = Objects.requireNonNull(etDistCode.getText()).toString().trim();
                 stateName = spinStateName.getSelectedItem().toString();
-                stateCode = spinStateCode.getSelectedItem().toString();
+                stateCode = Objects.requireNonNull(etStateCode.getText()).toString();
 
                 if (stateName.isEmpty()) {
                     Toast.makeText(AddDistrictActivity.this, "Please Select State Name", Toast.LENGTH_SHORT).show();
@@ -175,7 +173,8 @@ public class AddDistrictActivity extends AppCompatActivity {
                                 DistrictData districtData = new DistrictData(stateName, stateCode, distId, distName, distCode);
                                 myref.child(distName).setValue(districtData);
                                 spinStateName.setSelection(0);
-                                spinStateCode.setSelection(0);
+                               // spinStateCode.setSelection(0);
+                                etStateCode.setText("");
                                 etDistName.setText("");
                                 etDistCode.setText("");
 
@@ -190,7 +189,6 @@ public class AddDistrictActivity extends AppCompatActivity {
                         }
 
                     });
-
 
 
                 }

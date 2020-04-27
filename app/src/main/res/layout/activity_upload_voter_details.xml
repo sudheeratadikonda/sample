@@ -15,13 +15,22 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:id="@+id/image"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/rounde_corners"
-            android:padding="5dp"
+            android:padding="1dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_add_a_photo_black_24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/holo_red_light"
+            android:text="click Above camera icon to upload image*."/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -33,7 +42,7 @@
             android:layout_height="wrap_content"
             android:hint="Voter Id"
             android:id="@+id/etVoterId"
-            android:inputType="text"/>
+            android:inputType="textCapWords" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -48,7 +57,7 @@
             android:layout_height="wrap_content"
             android:hint="Voter Name"
             android:id="@+id/etVoterName"
-            android:inputType="text"
+            android:inputType="textCapWords"
             />
 
 
@@ -138,7 +147,7 @@
             android:layout_height="wrap_content"
             android:hint="Dr No."
             android:id="@+id/etDrNo"
-            android:inputType="text"
+            android:inputType="textCapWords"
             />
 
 
@@ -154,7 +163,7 @@
             android:layout_height="wrap_content"
             android:hint="lane"
             android:id="@+id/etLane"
-            android:inputType="text"
+            android:inputType="textCapWords"
             />
 
 
@@ -170,7 +179,7 @@
             android:layout_height="wrap_content"
             android:hint="Street"
             android:id="@+id/etStreet"
-            android:inputType="text"
+            android:inputType="textCapWords"
             />
 
 
@@ -186,7 +195,7 @@
             android:layout_height="wrap_content"
             android:hint="Place"
             android:id="@+id/etPlace"
-            android:inputType="text"
+            android:inputType="textCapWords"
             />
 
 
@@ -204,7 +213,7 @@
             android:layout_height="wrap_content"
             android:hint="Landmark"
             android:id="@+id/etLandmark"
-            android:inputType="text"
+            android:inputType="textCapWords"
             />
 
 
@@ -252,7 +261,7 @@
         android:text="Submit"
         android:textColor="@color/colorWhite"
         android:background="@color/colorAccent"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="10dp"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

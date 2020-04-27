@@ -1,8 +1,6 @@
 package com.example.sample.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,23 +26,21 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class AddMandalActivity extends AppCompatActivity {
 
     @BindView(R.id.spinStateName)
     Spinner spinStateName;
-    @BindView(R.id.spinStateCode)
-    Spinner spinStateCode;
+    /*@BindView(R.id.spinStateCode)
+    Spinner spinStateCode;*/
     @BindView(R.id.spinDistName)
     Spinner spinDistName;
-    @BindView(R.id.spinDistCode)
-    Spinner spinDistCode;
+    /*@BindView(R.id.spinDistCode)
+    Spinner spinDistCode;*/
     @BindView(R.id.etMandalName)
     TextInputEditText etMandalName;
     @BindView(R.id.etMandalCode)
@@ -55,6 +51,10 @@ public class AddMandalActivity extends AppCompatActivity {
     String mandalName, mandalCode, mandalId, stateName, stateCode, districtName, districtCode;
     ArrayList<String> stateList, stateCodeList, districtList, districtCodeList;
     ProgressDialog progressDialog;
+    @BindView(R.id.etStateCode)
+    TextInputEditText etStateCode;
+    @BindView(R.id.etDistCode)
+    TextInputEditText etDistCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +72,9 @@ public class AddMandalActivity extends AppCompatActivity {
 
         stateList = new ArrayList<String>();
         stateList.add("Select State Name");
-        stateCodeList = new ArrayList<String>();
-        stateCodeList.add("Select State Code");
         districtList = new ArrayList<>();
         districtList.add("Select District Name");
-        districtCodeList = new ArrayList<>();
-        districtCodeList.add("Select District Code");
+
 
         myref = FirebaseDatabase.getInstance().getReference().child("Mandal_Details");
         databaseReference = FirebaseDatabase.getInstance().getReference("State_Details");
@@ -112,15 +109,11 @@ public class AddMandalActivity extends AppCompatActivity {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()) {
-                                        stateCodeList.clear();
-                                        stateCodeList.add("Select State Code");
                                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                             String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
-                                            stateCodeList.add(stateCode);
+                                            etStateCode.setText(stateCode);
                                         }
-                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, stateCodeList);
-                                        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                                        spinStateCode.setAdapter(arrayAdapter);
+
                                     }
                                 }
 
@@ -169,15 +162,11 @@ public class AddMandalActivity extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             if (dataSnapshot.exists()) {
-                                                districtCodeList.clear();
-                                                districtCodeList.add("Select District Code");
+
                                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                                     String districtCode = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictcode();
-                                                    districtCodeList.add(districtCode);
+                                                    etDistCode.setText(districtCode);
                                                 }
-                                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, districtCodeList);
-                                                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                                                spinDistCode.setAdapter(arrayAdapter);
                                                 progressDialog.dismiss();
                                             }
                                         }
@@ -220,8 +209,8 @@ public class AddMandalActivity extends AppCompatActivity {
                 mandalCode = Objects.requireNonNull(etMandalCode.getText()).toString().trim();
                 mandalName = Objects.requireNonNull(etMandalName.getText()).toString().trim();
                 stateName = spinStateName.getSelectedItem().toString();
-                stateCode = spinStateCode.getSelectedItem().toString();
-                districtCode = spinDistCode.getSelectedItem().toString();
+                stateCode = Objects.requireNonNull(etStateCode.getText()).toString();
+                districtCode = Objects.requireNonNull(etDistCode.getText()).toString();
                 districtName = spinDistName.getSelectedItem().toString();
 
                 if (stateName.isEmpty()) {
@@ -253,9 +242,11 @@ public class AddMandalActivity extends AppCompatActivity {
                                 Toast.makeText(AddMandalActivity.this, "Data inserted Successfully !", Toast.LENGTH_SHORT).show();
 
                                 spinStateName.setSelection(0);
-                                spinStateCode.setSelection(0);
+                                etDistCode.setText("");
                                 spinDistName.setSelection(0);
-                                spinDistCode.setSelection(0);
+                                etStateCode.setText("");
+                                etMandalName.setText("");
+                                etMandalCode.setText("");
 
 
                             }
@@ -267,9 +258,6 @@ public class AddMandalActivity extends AppCompatActivity {
                         }
 
                     });
-
-
-
 
 
                 }

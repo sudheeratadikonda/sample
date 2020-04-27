@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,96 +8,125 @@
     android:padding="16dp"
     tools:context=".activity.VoteActivity">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etSearch"
-        android:hint="Enter VoterID"
-        android:padding="10dp"
-        android:background="@drawable/rounde_corners"/>
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSearch"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorAccent"
-        android:text="Search"
-        android:textColor="@color/colorWhite"/>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:weightSum="3">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/roundedgrey_color"
-        android:src="@drawable/ic_add_a_photo_black_24dp"/>
+           <EditText
+               android:layout_width="match_parent"
+               android:layout_height="45dp"
+               android:id="@+id/etSearch"
+               android:hint="Enter VoterID"
+               android:padding="10dp"
+               android:background="@drawable/rounde_corners"
+               android:layout_weight="1"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/roundedgrey_color">
+           <Button
+               android:layout_width="match_parent"
+               android:layout_height="45dp"
+               android:id="@+id/btnSearch"
+               android:layout_marginStart="10dp"
+               android:background="@color/colorAccent"
+               android:text="Search"
+               android:textColor="@color/colorWhite"
+               android:layout_weight="2"/>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtId"
-            android:layout_margin="15dp"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtName"
-            android:layout_margin="15dp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtMandal"
-            android:layout_margin="15dp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtDistrict"
-            android:layout_margin="15dp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtState"
-            android:layout_margin="15dp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor"/>
-    </LinearLayout>
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:layout_marginTop="16dp"
+           android:background="@drawable/roundedgrey_color">
 
 
+           <ImageView
+               android:id="@+id/image"
+               android:layout_width="120dp"
+               android:layout_height="120dp"
+               android:layout_gravity="center_horizontal"
+               android:layout_marginTop="20dp"
+               android:layout_marginBottom="20dp"
+               android:scaleType="fitXY"
+               android:background="@drawable/roundedgrey_color"
+               android:src="@drawable/ic_add_a_photo_black_24dp"/>
+
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/txtId"
+               android:layout_margin="15dp"
+               />
+
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/txtName"
+               android:layout_margin="15dp"/>
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/txtMandal"
+               android:layout_margin="15dp"/>
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/txtDistrict"
+               android:layout_margin="15dp"/>
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/txtState"
+               android:layout_margin="15dp"/>
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+           <TextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:id="@+id/txtStatus"
+               android:layout_margin="15dp"/>
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:background="@color/greycolor"/>
+       </LinearLayout>
+
+   </LinearLayout>
 
 
-</LinearLayout>
+
+
+
+
+</androidx.core.widget.NestedScrollView>

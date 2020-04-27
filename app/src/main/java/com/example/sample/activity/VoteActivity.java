@@ -2,13 +2,11 @@ package com.example.sample.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,8 +48,10 @@ public class VoteActivity extends AppCompatActivity {
     @BindView(R.id.txtState)
     TextView txtState;
     DatabaseReference myref;
-    String voterId,imgUrl,name,mandal,district,state;
+    String voterId, imgUrl, name, mandal, district, state,status;
     ProgressDialog progressDialog;
+    @BindView(R.id.txtStatus)
+    TextView txtStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class VoteActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Voter");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        myref= FirebaseDatabase.getInstance().getReference("Voter_Details");
+        myref = FirebaseDatabase.getInstance().getReference("Voter_Details");
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -87,6 +87,7 @@ public class VoteActivity extends AppCompatActivity {
                                     mandal = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterMandal();
                                     district = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterDistrict();
                                     state = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterState();
+                                    status = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterStatus();
                                 }
                                 getUserDetails();
                             } else {
@@ -105,8 +106,6 @@ public class VoteActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
     @Override
@@ -122,13 +121,14 @@ public class VoteActivity extends AppCompatActivity {
     public void onViewClicked() {
     }
 
-    void getUserDetails(){
+    void getUserDetails() {
         Glide.with(this).load(imgUrl).into(image);
-        txtId.setText("Voter ID: " +voterId);
-        txtName.setText("Name: " + name);
-        txtMandal.setText("Mandal: "+ mandal);
-        txtDistrict.setText("District: "+ district);
-        txtState.setText("State: " + state);
+        txtId.setText("Voter ID  :  " + voterId);
+        txtName.setText("Name  :  " + name);
+        txtMandal.setText("Mandal  :  " + mandal);
+        txtDistrict.setText("District  :  " + district);
+        txtState.setText("State  :  " + state);
+        txtStatus.setText("Status  :  " + status);
         progressDialog.dismiss();
     }
 }

@@ -16,11 +16,12 @@ public class VoterData  {
     private String voterLandmark;
     private String voterEmail;
     private String voterMobile;
+    private String voterStatus;
 
     public VoterData() {
     }
 
-    public VoterData(String imageUrl, String voterID, String voterName, String voterGender, String voterDob, String voterState, String voterDistrict, String voterMandal, String voterDrno, String voterLane, String voterStreet, String voterPlace, String voterLandmark, String voterEmail, String voterMobile) {
+    public VoterData(String imageUrl, String voterID, String voterName, String voterGender, String voterDob, String voterState, String voterDistrict, String voterMandal, String voterDrno, String voterLane, String voterStreet, String voterPlace, String voterLandmark, String voterEmail, String voterMobile,String  voterStatus) {
         this.imageUrl = imageUrl;
         this.voterID = voterID;
         this.voterName = voterName;
@@ -36,6 +37,7 @@ public class VoterData  {
         this.voterLandmark = voterLandmark;
         this.voterEmail = voterEmail;
         this.voterMobile = voterMobile;
+        this.voterStatus = voterStatus;
     }
 
     public String getImageUrl() {
@@ -156,5 +158,13 @@ public class VoterData  {
 
     public void setVoterMobile(String voterMobile) {
         this.voterMobile = voterMobile;
+    }
+
+    public String getVoterStatus() {
+        return voterStatus;
+    }
+
+    public void setVoterStatus(String voterStatus) {
+        this.voterStatus = voterStatus;
     }
 }
