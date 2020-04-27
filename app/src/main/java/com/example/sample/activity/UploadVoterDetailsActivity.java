@@ -6,11 +6,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,6 +58,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -137,11 +140,8 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
 
 
         stateNameList=new ArrayList<String>();
-        stateNameList.add("Select State Name");
         districtNameList=new ArrayList<String>();
-        districtNameList.add("Select District Name");
         mandalNameList=new ArrayList<String>();
-        mandalNameList.add("Select Mandal Name");
 
         myref = FirebaseDatabase.getInstance().getReference("State_Details");
         databaseReference=FirebaseDatabase.getInstance().getReference("District_Details");
@@ -186,7 +186,6 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(dataSnapshot.exists()) {
                             districtNameList.clear();
-                            districtNameList.add("Select District Name");
                             for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
                                 districtNameList.add(districtName);
@@ -215,7 +214,6 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         mandalNameList.clear();
-                        mandalNameList.add("Select Mandal Name");
                         String selectedDistrict = spinDistName.getSelectedItem().toString();
 
                         Query query = databaseReference1.orderByChild("district").equalTo(selectedDistrict);
@@ -326,8 +324,8 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
                                 regProgress.dismiss();
 
-                                Intent intent = new Intent(UploadVoterDetailsActivity.this, HomePageActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                Intent intent = new Intent(UploadVoterDetailsActivity.this, RegistrationActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
 
                             }
@@ -453,7 +451,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 try {
-                    //photo = (Bitmap) data.getExtras().get("data");
+                   // photo = (Bitmap) data.getExtras().get("data");
                     mPhotoFile = mCompressor.compressToFile(mPhotoFile);
                     selectedImage = data.getData();
 
@@ -468,18 +466,22 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 .placeholder(R.drawable.ic_add_a_photo_black_24dp))
                         .into(image);
             } else if (requestCode == REQUEST_GALLERY_PHOTO) {
+                selectedImage = data.getData();
+                Log.d("TAG", "onActivityResult: "+selectedImage);
+                mPhotoFile = new File(getRealPathFromUri(selectedImage));
+                Log.d("TAG", "onActivityResult: "+mPhotoFile);
                 try {
-                    selectedImage = data.getData();
-                    mPhotoFile = mCompressor.compressToFile(new File(getRealPathFromUri(selectedImage)));
-                } catch (IOException e) {
+                    Bitmap bitmap  = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
+                    image.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                Glide.with(UploadVoterDetailsActivity.this)
+                /*Glide.with(UploadVoterDetailsActivity.this)
                         .load(mPhotoFile)
                         .apply(new RequestOptions().centerCrop()
                                 .circleCrop()
                                 .placeholder(R.drawable.ic_add_a_photo_black_24dp))
-                        .into(image);
+                        .into(image);*/
             }
         }
     }
