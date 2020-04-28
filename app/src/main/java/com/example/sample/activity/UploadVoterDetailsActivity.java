@@ -125,7 +125,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Upload Voter Details");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        mCompressor = new FileCompressor(this);
+        mCompressor = new FileCompressor(UploadVoterDetailsActivity.this);
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -320,7 +320,9 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                                 while (!uriTask.isSuccessful()) ;
                                 Uri downloadUrl = uriTask.getResult();
+                                assert downloadUrl != null;
                                 VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile,"No");
+                                assert imgId != null;
                                 voterRef.child(imgId).setValue(voterData);
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
                                 regProgress.dismiss();
@@ -425,7 +427,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                 // Error occurred while creating the File
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                Uri photoURI = FileProvider.getUriForFile(UploadVoterDetailsActivity.this,
                         BuildConfig.APPLICATION_ID + ".provider",
                         photoFile);
 

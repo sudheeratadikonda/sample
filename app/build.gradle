@@ -46,22 +46,22 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.google.firebase:firebase-auth:19.3.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
-
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
 
     // reactive
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
-    implementation('com.github.bumptech.glide:glide:4.7.1@aar') {
+    implementation "io.reactivex.rxjava2:rxjava:2.2.6"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation('com.github.bumptech.glide:glide:4.10.0') {
         transitive = true
     }
     /**
      * For managing request permission
      */
-    implementation 'com.karumi:dexter:4.2.0'
+    implementation 'com.karumi:dexter:6.0.0'
 
-    // code generator for view
-    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-    implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
+    // butter Knife
+    //noinspection AnnotationProcessorOnCompilePath
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
 }
