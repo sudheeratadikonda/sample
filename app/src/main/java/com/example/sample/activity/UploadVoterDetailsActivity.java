@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -260,7 +261,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(selectedImage==null) {
+                if(mPhotoFile==null) {
                     Toast.makeText(UploadVoterDetailsActivity.this, "Please select Image", Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -312,7 +313,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     else {
 
                         StorageReference ref = storageReference.child("Images/" + imgId);
-                        ref.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        ref.putFile(Uri.fromFile(mPhotoFile)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
@@ -324,7 +325,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
                                 regProgress.dismiss();
 
-                                Intent intent = new Intent(UploadVoterDetailsActivity.this, RegistrationActivity.class);
+                                Intent intent = new Intent(UploadVoterDetailsActivity.this, HomePageActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
 
@@ -392,16 +393,16 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
      * Alert dialog for capture or select from galley
      */
     private void selectImage() {
-        final CharSequence[] items = {
-                "Take Photo", "Choose from Library",
-                "Cancel"
-        };
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(UploadVoterDetailsActivity.this);
         builder.setItems(items, (dialog, item) -> {
             if (items[item].equals("Take Photo")) {
                 requestStoragePermission(true);
             } else if (items[item].equals("Choose from Library")) {
-                requestStoragePermission(false);
+                if(Build.VERSION.SDK_INT>22){
+                    requestStoragePermission(false);
+                }
             } else if (items[item].equals("Cancel")) {
                 dialog.dismiss();
             }
@@ -431,9 +432,11 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                 mPhotoFile = photoFile;
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+
             }
         }
     }
+
 
     /**
      * Select image fro gallery
@@ -445,43 +448,27 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         startActivityForResult(pickPhoto, REQUEST_GALLERY_PHOTO);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_PHOTO) {
                 try {
-                   // photo = (Bitmap) data.getExtras().get("data");
                     mPhotoFile = mCompressor.compressToFile(mPhotoFile);
-                    selectedImage = data.getData();
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Glide.with(UploadVoterDetailsActivity.this)
-                        .load(mPhotoFile)
-                        .apply(new RequestOptions().centerCrop()
-                                .circleCrop()
-                                .placeholder(R.drawable.ic_add_a_photo_black_24dp))
-                        .into(image);
+                Glide.with(UploadVoterDetailsActivity.this).load(mPhotoFile).apply(new RequestOptions().centerCrop().circleCrop().placeholder(R.drawable.ic_add_a_photo_black_24dp)).into(image);
             } else if (requestCode == REQUEST_GALLERY_PHOTO) {
-                selectedImage = data.getData();
-                Log.d("TAG", "onActivityResult: "+selectedImage);
-                mPhotoFile = new File(getRealPathFromUri(selectedImage));
-                Log.d("TAG", "onActivityResult: "+mPhotoFile);
+                Uri selectedImage = data.getData();
                 try {
-                    Bitmap bitmap  = BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage));
-                    image.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
+                    mPhotoFile = mCompressor.compressToFile(new File(getRealPathFromUri(selectedImage)));
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                /*Glide.with(UploadVoterDetailsActivity.this)
-                        .load(mPhotoFile)
-                        .apply(new RequestOptions().centerCrop()
-                                .circleCrop()
-                                .placeholder(R.drawable.ic_add_a_photo_black_24dp))
-                        .into(image);*/
+                Glide.with(UploadVoterDetailsActivity.this).load(mPhotoFile).apply(new RequestOptions().centerCrop().circleCrop().placeholder(R.drawable.ic_add_a_photo_black_24dp)).into(image);
+
             }
         }
     }
@@ -492,9 +479,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
      * On permanent denial opens settings dialog
      */
     private void requestStoragePermission(boolean isCamera) {
-        Dexter.withActivity(this)
-                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+        Dexter.withActivity(this).withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -514,17 +499,14 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions,
-                                                                   PermissionToken token) {
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
                         token.continuePermissionRequest();
                     }
-                })
-                .withErrorListener(
-                        error -> Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT)
-                                .show())
+                }).withErrorListener(error -> Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show())
                 .onSameThread()
                 .check();
     }
+
 
     /**
      * Showing Alert Dialog with Settings option
@@ -534,14 +516,14 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     private void showSettingsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Need Permissions");
-        builder.setMessage(
-                "This app needs permission to use this feature. You can grant them in app settings.");
+        builder.setMessage("This app needs permission to use this feature. You can grant them in app settings.");
         builder.setPositiveButton("GOTO SETTINGS", (dialog, which) -> {
             dialog.cancel();
             openSettings();
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
         builder.show();
+
     }
 
     // navigating user to app settings
@@ -555,6 +537,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     /**
      * Create file with current timestamp name
      *
+     * @return
      * @throws IOException
      */
     private File createImageFile() throws IOException {
@@ -568,11 +551,14 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
 
     /**
      * Get real file path from URI
+     *
+     * @param contentUri
+     * @return
      */
     public String getRealPathFromUri(Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {MediaStore.Images.Media.DATA};
             cursor = getContentResolver().query(contentUri, proj, null, null, null);
             assert cursor != null;
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);

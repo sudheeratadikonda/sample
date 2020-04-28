@@ -49,8 +49,8 @@ dependencies {
 
 
     // reactive
-    implementation "io.reactivex.rxjava2:rxjava:2.1.9"
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjava2Version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
     implementation('com.github.bumptech.glide:glide:4.7.1@aar') {
         transitive = true
     }
@@ -59,8 +59,9 @@ dependencies {
      */
     implementation 'com.karumi:dexter:4.2.0'
 
-    // butter Knife
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    // code generator for view
+    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+    implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
 
 }
