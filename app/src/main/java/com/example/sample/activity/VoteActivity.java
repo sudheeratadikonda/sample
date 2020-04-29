@@ -1,16 +1,19 @@
 package com.example.sample.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -30,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class VoteActivity extends AppCompatActivity {
-
+    AlertDialog.Builder builder;
     @BindView(R.id.etSearch)
     EditText etSearch;
     @BindView(R.id.btnSearch)
@@ -48,10 +51,14 @@ public class VoteActivity extends AppCompatActivity {
     @BindView(R.id.txtState)
     TextView txtState;
     DatabaseReference myref;
-    String voterId, imgUrl, name, mandal, district, state,status;
+    String voterId, imgUrl, name, mandal, district, state, status;
     ProgressDialog progressDialog;
     @BindView(R.id.txtStatus)
     TextView txtStatus;
+    @BindView(R.id.detailsLayout)
+    LinearLayout detailsLayout;
+    @BindView(R.id.btnVote)
+    Button btnVote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +124,33 @@ public class VoteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.btnSearch)
+    @OnClick(R.id.btnVote)
     public void onViewClicked() {
-    }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                VoteActivity.this);
+        builder.setTitle("Confirm");
+        builder.setMessage("Are you sure want to vote this voterId  ?");
+        builder.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        Toast.makeText(getApplicationContext(),"No is clicked",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.setPositiveButton("YES",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        Toast.makeText(getApplicationContext(),"Yes is clicked",Toast.LENGTH_LONG).show();
+                    }
+                });
+        builder.show();
+
+}
 
     void getUserDetails() {
+        detailsLayout.setVisibility(View.VISIBLE);
         Glide.with(this).load(imgUrl).into(image);
         txtId.setText("Voter ID  :  " + voterId);
         txtName.setText("Name  :  " + name);
@@ -129,6 +158,12 @@ public class VoteActivity extends AppCompatActivity {
         txtDistrict.setText("District  :  " + district);
         txtState.setText("State  :  " + state);
         txtStatus.setText("Status  :  " + status);
+
+        if (status.equalsIgnoreCase("Yes")){
+            btnVote.setVisibility(View.GONE);
+        }else {
+            btnVote.setVisibility(View.VISIBLE);
+        }
         progressDialog.dismiss();
     }
 }

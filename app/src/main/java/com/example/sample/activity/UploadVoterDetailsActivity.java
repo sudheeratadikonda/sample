@@ -1,7 +1,9 @@
 package com.example.sample.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -63,6 +65,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -71,6 +74,8 @@ import com.example.sample.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class UploadVoterDetailsActivity extends AppCompatActivity {
+    int mYear, mMonth, mDay;
+
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_GALLERY_PHOTO = 2;
     File mPhotoFile;
@@ -255,6 +260,22 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        etDob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // date of birth picker
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                c.setTimeInMillis(System.currentTimeMillis() - 1000);
+                @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(UploadVoterDetailsActivity.this,
+                        (view1, year, monthOfYear, dayOfMonth) -> etDob.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year), mYear, mMonth, mDay);
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
             }
         });
 

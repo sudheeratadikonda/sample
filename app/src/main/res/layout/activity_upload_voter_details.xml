@@ -42,7 +42,8 @@
             android:layout_height="wrap_content"
             android:hint="Voter Id"
             android:id="@+id/etVoterId"
-            android:inputType="textCapWords" />
+            android:textAllCaps="true"
+            android:inputType="textCapCharacters" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -110,10 +111,46 @@
             android:hint="Date of Birth"
             android:id="@+id/etDob"
             android:inputType="date"
+            android:focusable="false"
             />
 
 
     </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email"
+                android:id="@+id/etEmail"
+                android:inputType="textEmailAddress"
+                />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile"
+                android:id="@+id/etMobile"
+                android:inputType="phone"
+                android:maxLength="10"
+                />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <Spinner
             android:layout_width="match_parent"
@@ -214,38 +251,6 @@
             android:hint="Landmark"
             android:id="@+id/etLandmark"
             android:inputType="textCapWords"
-            />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            android:id="@+id/etEmail"
-            android:inputType="textEmailAddress"
-            />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Mobile"
-            android:id="@+id/etMobile"
-            android:inputType="phone"
             />
 
 

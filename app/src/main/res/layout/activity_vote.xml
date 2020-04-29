@@ -25,6 +25,8 @@
                android:id="@+id/etSearch"
                android:hint="Enter VoterID"
                android:padding="10dp"
+               android:textAllCaps="true"
+               android:inputType="textCapCharacters"
                android:background="@drawable/rounde_corners"
                android:layout_weight="1"/>
 
@@ -39,12 +41,15 @@
                android:layout_weight="2"/>
 
        </LinearLayout>
+
        <LinearLayout
+           android:id="@+id/detailsLayout"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="vertical"
            android:layout_marginTop="16dp"
-           android:background="@drawable/roundedgrey_color">
+           android:background="@drawable/roundedgrey_color"
+           android:visibility="gone">
 
 
            <ImageView
@@ -120,6 +125,16 @@
                android:layout_width="match_parent"
                android:layout_height="1dp"
                android:background="@color/greycolor"/>
+
+           <Button
+               android:layout_width="wrap_content"
+               android:layout_height="35dp"
+               android:layout_gravity="center_horizontal"
+               android:layout_margin="10dp"
+               android:id="@+id/btnVote"
+               android:background="@color/colorAccent"
+               android:text="vote"
+               android:textColor="@color/colorWhite"/>
        </LinearLayout>
 
    </LinearLayout>
