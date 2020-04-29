@@ -17,11 +17,12 @@ public class VoterData  {
     private String voterEmail;
     private String voterMobile;
     private String voterStatus;
+    private String imgId;
 
     public VoterData() {
     }
 
-    public VoterData(String imageUrl, String voterID, String voterName, String voterGender, String voterDob, String voterState, String voterDistrict, String voterMandal, String voterDrno, String voterLane, String voterStreet, String voterPlace, String voterLandmark, String voterEmail, String voterMobile,String  voterStatus) {
+    public VoterData(String imageUrl, String voterID, String voterName, String voterGender, String voterDob, String voterState, String voterDistrict, String voterMandal, String voterDrno, String voterLane, String voterStreet, String voterPlace, String voterLandmark, String voterEmail, String voterMobile,String  voterStatus,String imgId) {
         this.imageUrl = imageUrl;
         this.voterID = voterID;
         this.voterName = voterName;
@@ -38,6 +39,15 @@ public class VoterData  {
         this.voterEmail = voterEmail;
         this.voterMobile = voterMobile;
         this.voterStatus = voterStatus;
+        this.imgId = imgId;
+    }
+
+    public String getImgId() {
+        return imgId;
+    }
+
+    public void setImgId(String imgId) {
+        this.imgId = imgId;
     }
 
     public String getImageUrl() {

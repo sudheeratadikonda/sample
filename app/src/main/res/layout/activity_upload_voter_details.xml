@@ -30,7 +30,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:textColor="@android:color/holo_red_light"
-            android:text="click Above camera icon to upload image*."/>
+            android:text="Click Above camera icon to upload image*."/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -156,6 +156,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:spinnerMode="dialog"
             android:id="@+id/spinStateName"/>
 
 
@@ -163,6 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/spinDistName"
+            android:spinnerMode="dialog"
             android:layout_marginTop="20dp"/>
 
 
@@ -170,6 +172,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/spinMandalName"
+            android:spinnerMode="dialog"
             android:layout_marginTop="20dp"/>
 
 

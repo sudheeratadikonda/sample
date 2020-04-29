@@ -31,6 +31,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -61,6 +62,7 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -115,19 +117,18 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     @BindView(R.id.btnSubmit)
     Button btnSubmit;
     RadioButton radioButton;
-    DatabaseReference voterRef,myref,databaseReference,databaseReference1;
-    ArrayList<String> stateNameList,districtNameList,mandalNameList;
-    ProgressDialog progressDialog,regProgress;
+    DatabaseReference voterRef, myRefStates, myRefDistricts, myRefMandals;
+    ArrayList<String> stateNameList, districtNameList, mandalNameList;
+    ProgressDialog progressDialog, regProgress;
     StorageReference storageReference;
-    Uri selectedImage;
-    String voterId,voterName,voterGender,voterDoB,voterState,voterDistrict,voterMandal,voterDrno,voterLane,voterStreet,voterPlace,voterLandmark,voterEmail,voterMobile,photoUrl;
-    Bitmap photo;
+    String voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile, photoUrl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_voter_details);
-        ButterKnife.bind(this);
+        ButterKnife.bind(UploadVoterDetailsActivity.this);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Upload Voter Details");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
@@ -135,134 +136,35 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(UploadVoterDetailsActivity.this);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage("Fetching Data...");
         progressDialog.show();
 
-        regProgress=new ProgressDialog(this);
+
+        regProgress = new ProgressDialog(UploadVoterDetailsActivity.this);
 
         voterRef = FirebaseDatabase.getInstance().getReference().child("Voter_Details");
 
 
-        stateNameList=new ArrayList<String>();
-        districtNameList=new ArrayList<String>();
-        mandalNameList=new ArrayList<String>();
+        stateNameList = new ArrayList<String>();
 
-        myref = FirebaseDatabase.getInstance().getReference("State_Details");
-        databaseReference=FirebaseDatabase.getInstance().getReference("District_Details");
-        databaseReference1=FirebaseDatabase.getInstance().getReference("Mandal_Details");
+        districtNameList = new ArrayList<String>();
+        mandalNameList = new ArrayList<String>();
 
-        myref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()) {
-                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
-                        stateNameList.add(stateName);
-                    }
 
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this,R.layout.support_simple_spinner_dropdown_item, stateNameList);
-                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                    spinStateName.setAdapter(arrayAdapter);
+        myRefStates = FirebaseDatabase.getInstance().getReference("State_Details");
+        myRefDistricts = FirebaseDatabase.getInstance().getReference("District_Details");
+        myRefMandals = FirebaseDatabase.getInstance().getReference("Mandal_Details");
 
-                } else {
-                    progressDialog.dismiss();
-                    Toast.makeText(UploadVoterDetailsActivity.this, "No data Found", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
 
-        spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        getStates();
+        getDistrict("");
+        getMandal("");
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                String selectedState = spinStateName.getSelectedItem().toString();
-
-                //Retrieving District Names based on State Selected
-                Query query1 = databaseReference.orderByChild("state").equalTo(selectedState);
-                query1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists()) {
-                            districtNameList.clear();
-                            for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
-                                districtNameList.add(districtName);
-                            }
-
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this,R.layout.support_simple_spinner_dropdown_item, districtNameList);
-                            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                            spinDistName.setAdapter(arrayAdapter);
-
-                        } else {
-                            districtNameList.clear();
-                            progressDialog.dismiss();
-                            Toast.makeText(UploadVoterDetailsActivity.this, "No data Found", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                //Retrieving Mandal Name as per District Name
-                spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        mandalNameList.clear();
-                        String selectedDistrict = spinDistName.getSelectedItem().toString();
-
-                        Query query = databaseReference1.orderByChild("district").equalTo(selectedDistrict);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()) {
-                                    for(DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
-                                        String mandalName = Objects.requireNonNull(dataSnapshot1.getValue(MandalData.class)).getMandal();
-                                        mandalNameList.add(mandalName);
-                                    }
-                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this,R.layout.support_simple_spinner_dropdown_item, mandalNameList);
-                                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                                    spinMandalName.setAdapter(arrayAdapter);
-                                    progressDialog.dismiss();
-                                }
-                                else{
-                                    progressDialog.dismiss();
-                                    Toast.makeText(UploadVoterDetailsActivity.this, "No Data Found !", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         etVoterId.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         etDob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,7 +176,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                 mDay = c.get(Calendar.DAY_OF_MONTH);
                 c.setTimeInMillis(System.currentTimeMillis() - 1000);
                 @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(UploadVoterDetailsActivity.this,
-                        (view1, year, monthOfYear, dayOfMonth) -> etDob.setText((monthOfYear + 1) + "/" + dayOfMonth + "/" + year), mYear, mMonth, mDay);
+                        (view1, year, monthOfYear, dayOfMonth) -> etDob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year), mYear, mMonth, mDay);
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
                 datePickerDialog.show();
             }
@@ -283,10 +185,9 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mPhotoFile==null) {
+                if (mPhotoFile == null) {
                     Toast.makeText(UploadVoterDetailsActivity.this, "Please select Image", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     String imgId = voterRef.push().getKey();
                     int selctedId = radioGender.getCheckedRadioButtonId();
                     radioButton = (RadioButton) findViewById(selctedId);
@@ -295,9 +196,9 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     voterName = Objects.requireNonNull(etVoterName.getText()).toString().trim();
                     voterGender = radioButton.getText().toString();
                     voterDoB = Objects.requireNonNull(etDob.getText()).toString().trim();
-                    voterState = spinStateName.getSelectedItem().toString();
+                   /* voterState = spinStateName.getSelectedItem().toString();
                     voterDistrict = spinDistName.getSelectedItem().toString();
-                    voterMandal = spinMandalName.getSelectedItem().toString();
+                    voterMandal = spinMandalName.getSelectedItem().toString();*/
                     voterDrno = Objects.requireNonNull(etDrNo.getText()).toString().trim();
                     voterLane = Objects.requireNonNull(etLane.getText()).toString().trim();
                     voterStreet = Objects.requireNonNull(etStreet.getText()).toString().trim();
@@ -307,32 +208,30 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     voterMobile = Objects.requireNonNull(etMobile.getText()).toString().trim();
                     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
                     if (voterId.isEmpty()) {
-                        etVoterId.setError("Please enter Voter ID");
-                    } else if(voterName.isEmpty()) {
-                        etVoterName.setError("Please enter Voter Name");
-                    } else if(voterGender.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Voter ID", Toast.LENGTH_SHORT).show();
+                    } else if (voterName.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Voter Name", Toast.LENGTH_SHORT).show();
+                    } else if (voterGender.isEmpty()) {
                         Toast.makeText(UploadVoterDetailsActivity.this, "Please choose Gender", Toast.LENGTH_SHORT).show();
-                    } else if(voterDoB.isEmpty()) {
-                        etDob.setError("Please enter DOB");
-                    } else if(voterDrno.isEmpty()) {
-                        etDrNo.setError("Please enter Door No");
-                    }  else if(voterLane.isEmpty()) {
-                        etLane.setError("Please enter Lane ");
-                    } else if(voterStreet.isEmpty()) {
-                        etStreet.setError("Please enter Street");
-                    } else if(voterPlace.isEmpty()) {
-                        etPlace.setError("Please enter Place");
-                    } else if(voterLandmark.isEmpty()) {
-                        etLandmark.setError("Please enter Landmark");
-                    } else if(voterEmail.isEmpty()) {
-                        etEmail.setError("Please enter Email ID");
-                    } else if(emailPattern.matches(voterEmail)) {
-                         etEmail.setError("Please enter Valid Email ID");
-                    }
-                    else if(voterMobile.length()!=10) {
-                        etMobile.setError("Please enter Valid Mobile Number");
-                    }
-                    else {
+                    } else if (voterDoB.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter DOB", Toast.LENGTH_SHORT).show();
+                    } else if (voterDrno.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Door No", Toast.LENGTH_SHORT).show();
+                    } else if (voterLane.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Lane ", Toast.LENGTH_SHORT).show();
+                    } else if (voterStreet.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Street", Toast.LENGTH_SHORT).show();
+                    } else if (voterPlace.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Place", Toast.LENGTH_SHORT).show();
+                    } else if (voterLandmark.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Landmark", Toast.LENGTH_SHORT).show();
+                    } else if (voterEmail.isEmpty()) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Email ID", Toast.LENGTH_SHORT).show();
+                    } else if (emailPattern.matches(voterEmail)) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Valid Email ID", Toast.LENGTH_SHORT).show();
+                    } else if (voterMobile.length() != 10) {
+                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                    } else {
 
                         StorageReference ref = storageReference.child("Images/" + imgId);
                         ref.putFile(Uri.fromFile(mPhotoFile)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -343,7 +242,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 while (!uriTask.isSuccessful()) ;
                                 Uri downloadUrl = uriTask.getResult();
                                 assert downloadUrl != null;
-                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile,"No");
+                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile, "No", imgId);
                                 assert imgId != null;
                                 voterRef.child(imgId).setValue(voterData);
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
@@ -383,13 +282,160 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         });
 
 
+    }
+
+
+    public void getStates() {
+
+
+        myRefStates.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    stateNameList.clear();
+                    stateNameList.add("Select State");
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
+                        stateNameList.add(stateName);
+                    }
+
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this, R.layout.support_simple_spinner_dropdown_item, stateNameList);
+                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    spinStateName.setAdapter(arrayAdapter);
+
+
+                    spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            voterState = spinStateName.getSelectedItem().toString();
+
+                            getDistrict(voterState);
+
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                            getDistrict("");
+                        }
+                    });
+
+                    progressDialog.dismiss();
+                }else {
+                    progressDialog.dismiss();
+                    stateNameList.clear();
+                    stateNameList.add("Select State Name");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getDistrict(String selectedState) {
 
 
 
+        //Retrieving District Names based on State Selected
+        Query query1 = myRefDistricts.orderByChild("state").equalTo(selectedState);
+        query1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    districtNameList.clear();
+                    districtNameList.add("Select District");
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
+                        districtNameList.add(districtName);
+                    }
+
+                }else {
+                    districtNameList.clear();
+                    districtNameList.add("Select District");
+                }
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this, R.layout.support_simple_spinner_dropdown_item, districtNameList);
+                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinDistName.setAdapter(arrayAdapter);
+
+                //Retrieving Mandal Name as per District Name
+                spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        voterDistrict = spinDistName.getSelectedItem().toString();
+
+                        getMandal(voterDistrict);
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                        getMandal("");
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
+    }
+
+    public void getMandal(String selectedDistrict) {
+
+        Query query = myRefMandals.orderByChild("district").equalTo(selectedDistrict);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    mandalNameList.clear();
+                    mandalNameList.add("Select Mandal");
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String mandalName = Objects.requireNonNull(dataSnapshot1.getValue(MandalData.class)).getMandal();
+                        mandalNameList.add(mandalName);
+                    }
 
 
+                }
+                else {
+                    mandalNameList.clear();
+                    mandalNameList.add("Select Mandal");
+                }
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UploadVoterDetailsActivity.this, R.layout.support_simple_spinner_dropdown_item, mandalNameList);
+                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinMandalName.setAdapter(arrayAdapter);
+
+                spinMandalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        voterMandal = spinMandalName.getSelectedItem().toString();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -402,14 +448,10 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick({R.id.image, R.id.btnSubmit})
+    @OnClick({R.id.image})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.image:
-                selectImage();
-                break;
-            case R.id.btnSubmit:
-                break;
+        if (view.getId() == R.id.image) {
+            selectImage();
         }
     }
 
@@ -424,7 +466,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
             if (items[item].equals("Take Photo")) {
                 requestStoragePermission(true);
             } else if (items[item].equals("Choose from Library")) {
-                if(Build.VERSION.SDK_INT>22){
+                if (Build.VERSION.SDK_INT > 22) {
                     requestStoragePermission(false);
                 }
             } else if (items[item].equals("Cancel")) {

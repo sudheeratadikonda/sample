@@ -52,7 +52,7 @@ public class VoteActivity extends AppCompatActivity {
     @BindView(R.id.txtState)
     TextView txtState;
     DatabaseReference myref;
-    String voterId, imgUrl, name, mandal, district, state, status;
+    String voterId, imgUrl, name, mandal, district, state, status, imgId;
     ProgressDialog progressDialog;
     @BindView(R.id.txtStatus)
     TextView txtStatus;
@@ -80,35 +80,11 @@ public class VoteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 voterId = etSearch.getText().toString().trim();
                 if (voterId.isEmpty()) {
-                    etSearch.setError("Please enter Voter ID");
+                    Toast.makeText(VoteActivity.this, "Please enter Voter ID", Toast.LENGTH_SHORT).show();
                 } else {
                     progressDialog.show();
+                    getData();
 
-                    Query query = myref.orderByChild("voterID").equalTo(voterId);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    imgUrl = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getImageUrl();
-                                    name = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterName();
-                                    mandal = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterMandal();
-                                    district = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterDistrict();
-                                    state = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterState();
-                                    status = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterStatus();
-                                }
-                                getUserDetails();
-                            } else {
-                                progressDialog.dismiss();
-                                Toast.makeText(VoteActivity.this, "No Voter Found !!!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Toast.makeText(VoteActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 }
             }
         });
@@ -136,21 +112,56 @@ public class VoteActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        Toast.makeText(getApplicationContext(),"No is clicked",Toast.LENGTH_LONG).show();
+
+                        dialog.dismiss();
                     }
                 });
         builder.setPositiveButton("YES",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,
                                         int which) {
-                        Toast.makeText(getApplicationContext(),"Yes is clicked",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Your Vote was Successfully Submitted..!!", Toast.LENGTH_LONG).show();
+                        myref.child(imgId).child("voterStatus").setValue("Yes");
+                        getData();
+
                     }
                 });
         builder.show();
 
-}
+    }
 
-    void getUserDetails() {
+
+    public void getData() {
+        Query query = myref.orderByChild("voterID").equalTo(voterId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        imgUrl = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getImageUrl();
+                        name = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterName();
+                        mandal = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterMandal();
+                        district = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterDistrict();
+                        state = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterState();
+                        status = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getVoterStatus();
+                        imgId = Objects.requireNonNull(dataSnapshot1.getValue(VoterData.class)).getImgId();
+                    }
+                    getUserDetails();
+                } else {
+                    progressDialog.dismiss();
+                    Toast.makeText(VoteActivity.this, "No Voter Found !!!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(VoteActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    public void getUserDetails() {
         detailsLayout.setVisibility(View.VISIBLE);
         Glide.with(this).load(imgUrl).into(image);
         txtId.setText("Voter ID  :  " + voterId);
@@ -160,9 +171,9 @@ public class VoteActivity extends AppCompatActivity {
         txtState.setText("State  :  " + state);
         txtStatus.setText("Status  :  " + status);
 
-        if (status.equalsIgnoreCase("Yes")){
+        if (status.equalsIgnoreCase("Yes")) {
             btnVote.setVisibility(View.GONE);
-        }else {
+        } else {
             btnVote.setVisibility(View.VISIBLE);
         }
         progressDialog.dismiss();
