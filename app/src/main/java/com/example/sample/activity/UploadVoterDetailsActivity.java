@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -262,7 +263,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
 
             }
         });
-
+        etVoterId.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
         etDob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
