@@ -3,11 +3,18 @@ package com.example.sample.activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sample.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -16,8 +23,6 @@ import butterknife.ButterKnife;
 
 public class StatisticsActivity extends AppCompatActivity {
 
-    @BindView(R.id.txtTotalVotes)
-    TextView txtTotalVotes;
     @BindView(R.id.txtFemaleVotes)
     TextView txtFemaleVotes;
     @BindView(R.id.txtMaleVotes)
@@ -26,6 +31,12 @@ public class StatisticsActivity extends AppCompatActivity {
     TextView txtFemaleVotesPolled;
     @BindView(R.id.txtMaleVotesPolled)
     TextView txtMaleVotesPolled;
+    @BindView(R.id.txtTotalVotesPolled)
+    TextView getTxtTotalVotesPolled;
+    DatabaseReference myRefTotalVoters;
+    Long totalVoters,totalVotersPolled;
+    TextView txtTotalVotes;
+    long maleVoters,femaleVoters,maleVotersPolled,femaleVotersPolled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +46,160 @@ public class StatisticsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("Statistics");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        txtTotalVotes = (TextView) findViewById(R.id.txtTotalVotes);
 
-        txtTotalVotes.setText("% Voting Polled : "+"5000");
-        txtFemaleVotes.setText("% Female Voters : "+"2000");
-        txtMaleVotes.setText("% Male Voters : "+"3000");
-        txtFemaleVotesPolled.setText("% Female Voters Polled : "+"2000");
-        txtMaleVotesPolled.setText("% Male Voters Polled : "+"3000");
+        myRefTotalVoters = FirebaseDatabase.getInstance().getReference("Voter_Details");
+
+
+         //Total Voters
+        myRefTotalVoters.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    totalVoters = dataSnapshot.getChildrenCount();
+                    txtTotalVotes.setText("Total Voters : " + totalVoters);
+                } else {
+                    txtTotalVotes.setText("Total Voters : 0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+       //Total Voters Polled
+        Query query = myRefTotalVoters.orderByChild("voterStatus").equalTo("Yes");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    totalVotersPolled = dataSnapshot.getChildrenCount();
+                    getTxtTotalVotesPolled.setText("Voting Polled : "+ totalVotersPolled);
+                } else {
+                    getTxtTotalVotesPolled.setText("Voting Polled : 0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //Total male Voters
+        Query query1 = myRefTotalVoters.orderByChild("voterGender").equalTo("Male");
+        query1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    maleVoters = dataSnapshot.getChildrenCount();
+                    txtMaleVotes.setText("Male Voters : "+ maleVoters);
+                } else {
+                    txtMaleVotes.setText("Male Voters : 0");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //Total Female Voters
+
+        Query query2 = myRefTotalVoters.orderByChild("voterGender").equalTo("Female");
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    femaleVoters = dataSnapshot.getChildrenCount();
+                    if(femaleVoters!=0)
+                    txtFemaleVotes.setText("Female Voters : "+ femaleVoters);
+
+                } else {
+                    txtFemaleVotes.setText("Female Voters : 0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Query query3 = myRefTotalVoters.orderByChild("voterGender").equalTo("Male").orderByChild("voterStatus").equalTo("Yes");
+        query3.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    maleVotersPolled = dataSnapshot.getChildrenCount();
+
+                   /* Query query4 = .orderByChild("voterStatus").equalTo("Yes");
+                    query4.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()) {
+                                maleVotersPolled = dataSnapshot.getChildrenCount();
+                                txtMaleVotesPolled.setText("Male Voters Polled : "+ maleVotersPolled);
+                            } else {
+                                txtMaleVotesPolled.setText("Male Voters Polled : 0");
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
+                } else {
+                    txtMaleVotesPolled.setText("Male Voters Polled : 0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        Query query5 = myRefTotalVoters.orderByChild("voterGender").equalTo("Female");
+        query5.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+
+                    Query query6 = query5.orderByChild("voterStatus").equalTo("Yes");
+                    query6.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()) {
+                                femaleVotersPolled = dataSnapshot.getChildrenCount();
+                                txtFemaleVotesPolled.setText("Female Voters Polled : "+ femaleVotersPolled);
+                            } else {
+                                txtFemaleVotesPolled.setText("Female Voters Polled : 0");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    txtFemaleVotesPolled.setText("Female Voters Polled : 0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override

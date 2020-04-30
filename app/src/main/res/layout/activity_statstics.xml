@@ -16,6 +16,19 @@
         android:background="@drawable/roundedgrey_color">
 
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTotalVotes"
+            android:layout_margin="15dp"
+            />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -24,7 +37,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txtTotalVotes"
+        android:id="@+id/txtTotalVotesPolled"
         android:layout_margin="15dp"
         />
 

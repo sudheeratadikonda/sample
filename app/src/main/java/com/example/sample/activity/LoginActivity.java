@@ -43,6 +43,9 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        //Add Total Voters in Statistics
+        //Validations
+
         mAuth=FirebaseAuth.getInstance();
         myAppPrefsManager=new MyAppPrefsManager(LoginActivity.this);
         progressDialog = new ProgressDialog(this);
