@@ -1,6 +1,7 @@
 package com.example.sample.activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ public class StatisticsActivity extends AppCompatActivity {
     TextView txtMaleVotesPolled;
     @BindView(R.id.txtFeMaleVotesPolled)
     TextView txtFeMaleVotesPolled;
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -57,6 +59,12 @@ public class StatisticsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Statistics");
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Statistics...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
 
         myRefTotalVoters = FirebaseDatabase.getInstance().getReference("Voter_Details");
@@ -116,11 +124,12 @@ public class StatisticsActivity extends AppCompatActivity {
                     }
 
                     txtTotalVotes.setText("Total Voters Count: " + voterDataListTotal.size());
-                    txtMaleVotes.setText("Total Male Voters Count : " + voterDataListFeMale.size());
+                    txtMaleVotes.setText("Total Male Voters Count : " + voterDataListMale.size());
                     txtFemaleVotes.setText("Total Female Voters Count : " + voterDataListFeMale.size());
                     txtTotalVotesPolled.setText("Total Voters Polled : " + voterDataListPolled.size());
                     txtMaleVotesPolled.setText("Total Male Voters Polled: " + voterDataListMalePolled.size());
                     txtFeMaleVotesPolled.setText("Total Female Voters Polled: " + voterDataListFeMalePolled.size());
+                    progressDialog.dismiss();
 
 
                 } else {
@@ -130,6 +139,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     txtTotalVotesPolled.setText("Total Voters Polled : 0");
                     txtMaleVotesPolled.setText("Total Male Voters Polled: 0");
                     txtFeMaleVotesPolled.setText("Total Female Voters Polled: 0");
+                    progressDialog.dismiss();
                 }
             }
 
