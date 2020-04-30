@@ -4,84 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/roundedgrey_color"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@drawable/roundedgrey_color"
     tools:context=".activity.StatisticsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/roundedgrey_color">
-
+        android:background="@drawable/roundedgrey_color"
+        android:orientation="vertical">
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/greycolor"/>
+            android:background="@color/greycolor" />
 
         <TextView
+            android:id="@+id/txtTotalVotes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txtTotalVotes"
-            android:layout_margin="15dp"
-            />
+            android:layout_margin="15dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greycolor"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtTotalVotesPolled"
-        android:layout_margin="15dp"
-        />
+        <TextView
+            android:id="@+id/txtTotalVotesPolled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greycolor"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtFemaleVotes"
-        android:layout_margin="15dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greycolor"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtMaleVotes"
-        android:layout_margin="15dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greycolor"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtFemaleVotesPolled"
-        android:layout_margin="15dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greycolor"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtMaleVotesPolled"
-        android:layout_margin="15dp"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/greycolor"/>
+        <TextView
+            android:id="@+id/txtMaleVotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor" />
+
+        <TextView
+            android:id="@+id/txtFemaleVotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor" />
+
+        <TextView
+            android:id="@+id/txtMaleVotesPolled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor" />
+
+        <TextView
+            android:id="@+id/txtFeMaleVotesPolled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/greycolor" />
     </LinearLayout>
 
 </LinearLayout>
