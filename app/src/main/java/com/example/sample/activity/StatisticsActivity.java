@@ -1,6 +1,7 @@
 package com.example.sample.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sample.R;
+import com.example.sample.modals.VoterData;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +18,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -38,6 +42,11 @@ public class StatisticsActivity extends AppCompatActivity {
     TextView txtTotalVotes;
     long maleVoters,femaleVoters,maleVotersPolled,femaleVotersPolled;
 
+    List<VoterData> voterDataList;
+    List<String> voterDataList1;
+
+    String TAG="FIREBASE_DATA";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,14 +59,34 @@ public class StatisticsActivity extends AppCompatActivity {
 
         myRefTotalVoters = FirebaseDatabase.getInstance().getReference("Voter_Details");
 
+        voterDataList=new ArrayList<>();
+        voterDataList1=new ArrayList<>();
 
          //Total Voters
         myRefTotalVoters.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()) {
-                    totalVoters = dataSnapshot.getChildrenCount();
-                    txtTotalVotes.setText("Total Voters : " + totalVoters);
+
+                    voterDataList.clear();
+                    voterDataList1.clear();
+                    for (DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
+                        VoterData voterData=dataSnapshot1.getValue(VoterData.class);
+                        String data= String.valueOf(dataSnapshot1.child("voterGender").getValue(String.class).equalsIgnoreCase("Female"));
+
+                        voterDataList.add(voterData);
+                        voterDataList1.add(data);
+
+
+                    }
+
+                    //totalVoters = dataSnapshot.getChildrenCount();
+                    Log.d(TAG, "onDataChange: "+voterDataList.size());
+
+                    txtTotalVotes.setText("Total Voters : " +voterDataList.size());
+
+                    Log.d(TAG, "onDataChange: "+voterDataList1.size());
+
                 } else {
                     txtTotalVotes.setText("Total Voters : 0");
                 }
@@ -70,7 +99,8 @@ public class StatisticsActivity extends AppCompatActivity {
         });
 
 
-       //Total Voters Polled
+
+       /*//Total Voters Polled
         Query query = myRefTotalVoters.orderByChild("voterStatus").equalTo("Yes");
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -138,7 +168,8 @@ public class StatisticsActivity extends AppCompatActivity {
                 if(dataSnapshot.exists()) {
                     maleVotersPolled = dataSnapshot.getChildrenCount();
 
-                   /* Query query4 = .orderByChild("voterStatus").equalTo("Yes");
+                   *//*
+                   Query query4 = .orderByChild("voterStatus").equalTo("Yes");
                     query4.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -155,7 +186,7 @@ public class StatisticsActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             Toast.makeText(StatisticsActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    });*/
+                    });*//*
                 } else {
                     txtMaleVotesPolled.setText("Male Voters Polled : 0");
                 }
@@ -199,7 +230,7 @@ public class StatisticsActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     @Override
