@@ -24,11 +24,7 @@ import java.util.regex.Pattern;
  public  class ConstantValues {
 
     public static boolean IS_USER_LOGGED_IN_ADMIN;
-    public static boolean IS_USER_LOGGED_IN_TEACHER;
-    public static final String TYPE_TEXT_PLAIN = "text/plain";
-    public static final String SHARE = "Share";
-    public static final String SINGLE_HYPHEN = "-";
-    public static final String IMAGE_URL = "https://d2cax41o7ahm5l.cloudfront.net/";
+
 
 
     /*   Validating Fileds */
@@ -46,16 +42,6 @@ import java.util.regex.Pattern;
 
     }
 
-
-
-    public static void shareDeepLink(Activity activity, String str) {
-        if (activity != null) {
-            Intent intent = ShareCompat.IntentBuilder.from(activity).setType(TYPE_TEXT_PLAIN).setText(str).setChooserTitle((CharSequence) SHARE).getIntent();
-            if (intent.resolveActivity(activity.getPackageManager()) != null) {
-                activity.startActivity(intent);
-            }
-        }
-    }
 
     // Validating pincode
     public static  boolean isValidPincode(String pass1) {
@@ -119,41 +105,9 @@ import java.util.regex.Pattern;
         return str != null && !str.isEmpty() && str.trim().length() > 0;
     }
 
-    public static String getFormattedDate(String str, String j) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat spf=new SimpleDateFormat("yyyy-MM-dd");
 
 
-        Date newDate= null;
 
-        try {
-            newDate = spf.parse(j);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (isStringValid(str)) {
-            spf = new SimpleDateFormat(str, Locale.ENGLISH);
-
-        } else {
-            spf = new SimpleDateFormat(MyAppPrefsManager.DD_MMM_YYYY_DATE_FORMAT, Locale.ENGLISH);
-
-        }
-        assert newDate != null;
-        return spf.format(newDate);
-    }
-
-
-    public static String getAppVersion(Context context) {
-        String app_ver = "";
-        try {
-            app_ver = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0).versionName;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return app_ver;
-    }
 
 
 

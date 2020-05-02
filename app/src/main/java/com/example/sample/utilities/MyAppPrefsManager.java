@@ -17,35 +17,10 @@ public class MyAppPrefsManager {
     private static final String PREF_NAME = "DIGITAL_ATTENDANCE";
 
 
-    private static final String USER_ID  = "user_id";
-    private static final String USER_CONF_ID  = "user_conf_id";
-    private static final String USER_CONF_TITLE  = "user_conf_title";
-
-    private static final String USER_NAME  = "user_name";
-    private static final String USER_MOBILE  = "user_mobile";
-    private static final String USER_PINCODE  = "user_pincode";
-    private static final String USER_LANGUAGE_CODE  = "language_Code";
     private static final String IS_USER_LOGGED_IN_ADMIN = "isLogged_in_Admin";
-    private static final String IS_USER_LOGGED_IN_TEACHER = "isLogged_in_Teacher";
-    private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
-    private static final String IS_PUSH_NOTIFICATIONS_ENABLED = "isPushNotificationsEnabled";
-    private static final String IS_LOCAL_NOTIFICATIONS_ENABLED = "isLocalNotificationsEnabled";
-
-    private static final String LOCAL_NOTIFICATIONS_TITLE = "localNotificationsTitle";
-    private static final String LOCAL_NOTIFICATIONS_DURATION = "localNotificationsDuration";
-    private static final String LOCAL_NOTIFICATIONS_DESCRIPTION = "localNotificationsDescription";
 
 
-    public static final String DD_MMM_YYYY_DATE_FORMAT = "MMMM dd";
-    public static final String DD_MMM_YYYY_DATE_FORMAT1 = "MMMM dd, yyyy";
-
-
-
-
-
-
-
-     public MyAppPrefsManager(Context context) {
+    public MyAppPrefsManager(Context context) {
         int PRIVATE_MODE = 0;
         sharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         prefsEditor = sharedPreferences.edit();
@@ -53,78 +28,6 @@ public class MyAppPrefsManager {
     }
 
 
-
-
-
-    public void setUserId(String userId) {
-        prefsEditor.putString(USER_ID, userId);
-        prefsEditor.commit();
-    }
-    
-    public String getUserId() {
-        return sharedPreferences.getString(USER_ID, null);
-    }
-
-
-
-    public void setUserConfId(String userConfId) {
-        prefsEditor.putString(USER_CONF_ID, userConfId);
-        prefsEditor.commit();
-    }
-
-    public String getUserConfId() {
-        return sharedPreferences.getString(USER_CONF_ID, null);
-    }
-
-
-    public void setUserConfTitle(String userConfTitle) {
-        prefsEditor.putString(USER_CONF_TITLE, userConfTitle);
-        prefsEditor.commit();
-    }
-
-    public String getUserConfTitle() {
-        return sharedPreferences.getString(USER_CONF_TITLE, null);
-    }
-
-    public void setUserName(String userName) {
-        prefsEditor.putString(USER_NAME, userName);
-        prefsEditor.commit();
-    }
-
-    public String getUserName() {
-        return sharedPreferences.getString(USER_NAME, null);
-    }
-
-
-    public void setUserMobile(String userMobile) {
-        prefsEditor.putString(USER_MOBILE, userMobile);
-        prefsEditor.commit();
-    }
-
-    public String getUserMobile() {
-        return sharedPreferences.getString(USER_MOBILE, null);
-    }
-
-
-    public void setUserPincode(String userPincode) {
-        prefsEditor.putString(USER_PINCODE, userPincode);
-        prefsEditor.commit();
-    }
-
-    public String getUserPincode() {
-        return sharedPreferences.getString(USER_PINCODE, null);
-    }
-    
-    public void setUserLanguageCode(String langCode) {
-        prefsEditor.putString(USER_LANGUAGE_CODE, langCode);
-        prefsEditor.commit();
-    }
-    
-    public String getUserLanguageCode() {
-        return sharedPreferences.getString(USER_LANGUAGE_CODE, "en");
-    }
-    
-    
     public void setAdminLoggedIn(boolean isAdminLoggedIn) {
         prefsEditor.putBoolean(IS_USER_LOGGED_IN_ADMIN, isAdminLoggedIn);
         prefsEditor.commit();
@@ -134,69 +37,5 @@ public class MyAppPrefsManager {
         return sharedPreferences.getBoolean(IS_USER_LOGGED_IN_ADMIN, false);
     }
 
-
-    public void setTeacherLoggedIn(boolean isTeacherLoggedIn) {
-        prefsEditor.putBoolean(IS_USER_LOGGED_IN_TEACHER, isTeacherLoggedIn);
-        prefsEditor.commit();
-    }
-
-    public boolean isTeacherLoggedIn() {
-        return sharedPreferences.getBoolean(IS_USER_LOGGED_IN_TEACHER, false);
-    }
-
-    public void setFirstTimeLaunch(boolean isFirstTimeLaunch) {
-        prefsEditor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTimeLaunch);
-        prefsEditor.commit();
-    }
-
-    public boolean isFirstTimeLaunch() {
-        return sharedPreferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
-    }
-
-    public void setPushNotificationsEnabled(boolean isPushNotificationsEnabled) {
-        prefsEditor.putBoolean(IS_PUSH_NOTIFICATIONS_ENABLED, isPushNotificationsEnabled);
-        prefsEditor.commit();
-    }
-
-    public boolean isPushNotificationsEnabled() {
-        return sharedPreferences.getBoolean(IS_PUSH_NOTIFICATIONS_ENABLED, true);
-    }
-
-    public void setLocalNotificationsEnabled(boolean isLocalNotificationsEnabled) {
-        prefsEditor.putBoolean(IS_LOCAL_NOTIFICATIONS_ENABLED, isLocalNotificationsEnabled);
-        prefsEditor.commit();
-    }
-
-    public boolean isLocalNotificationsEnabled() {
-        return sharedPreferences.getBoolean(IS_LOCAL_NOTIFICATIONS_ENABLED, true);
-    }
-
-
-    public void setLocalNotificationsTitle(String localNotificationsTitle) {
-        prefsEditor.putString(LOCAL_NOTIFICATIONS_TITLE, localNotificationsTitle);
-        prefsEditor.commit();
-    }
-
-    public String getLocalNotificationsTitle() {
-        return sharedPreferences.getString(LOCAL_NOTIFICATIONS_TITLE, "Android Ecommerce");
-    }
-
-    public void setLocalNotificationsDuration(String localNotificationsDuration) {
-        prefsEditor.putString(LOCAL_NOTIFICATIONS_DURATION, localNotificationsDuration);
-        prefsEditor.commit();
-    }
-
-    public String getLocalNotificationsDuration() {
-        return sharedPreferences.getString(LOCAL_NOTIFICATIONS_DURATION, "day");
-    }
-
-    public void setLocalNotificationsDescription(String localNotificationsDescription) {
-        prefsEditor.putString(LOCAL_NOTIFICATIONS_DESCRIPTION, localNotificationsDescription);
-        prefsEditor.commit();
-    }
-
-    public String getLocalNotificationsDescription() {
-        return sharedPreferences.getString(LOCAL_NOTIFICATIONS_DESCRIPTION, "Check bundle of new Products");
-    }
 
 }

@@ -35,12 +35,8 @@ public class AddMandalActivity extends AppCompatActivity {
 
     @BindView(R.id.spinStateName)
     Spinner spinStateName;
-    /*@BindView(R.id.spinStateCode)
-    Spinner spinStateCode;*/
     @BindView(R.id.spinDistName)
     Spinner spinDistName;
-    /*@BindView(R.id.spinDistCode)
-    Spinner spinDistCode;*/
     @BindView(R.id.etMandalName)
     TextInputEditText etMandalName;
     @BindView(R.id.etMandalCode)

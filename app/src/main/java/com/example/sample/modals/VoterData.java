@@ -10,9 +10,6 @@ public class VoterData  {
     private String voterDistrict;
     private String voterMandal;
     private String voterDrno;
-    private String voterLane;
-    private String voterStreet;
-    private String voterPlace;
     private String voterLandmark;
     private String voterEmail;
     private String voterMobile;
@@ -22,7 +19,7 @@ public class VoterData  {
     public VoterData() {
     }
 
-    public VoterData(String imageUrl, String voterID, String voterName, String voterGender, String voterDob, String voterState, String voterDistrict, String voterMandal, String voterDrno, String voterLane, String voterStreet, String voterPlace, String voterLandmark, String voterEmail, String voterMobile,String  voterStatus,String imgId) {
+    public VoterData(String imageUrl, String voterID, String voterName, String voterGender, String voterDob, String voterState, String voterDistrict, String voterMandal, String voterDrno,  String voterLandmark, String voterEmail, String voterMobile,String  voterStatus,String imgId) {
         this.imageUrl = imageUrl;
         this.voterID = voterID;
         this.voterName = voterName;
@@ -32,9 +29,6 @@ public class VoterData  {
         this.voterDistrict = voterDistrict;
         this.voterMandal = voterMandal;
         this.voterDrno = voterDrno;
-        this.voterLane = voterLane;
-        this.voterStreet = voterStreet;
-        this.voterPlace = voterPlace;
         this.voterLandmark = voterLandmark;
         this.voterEmail = voterEmail;
         this.voterMobile = voterMobile;
@@ -120,30 +114,6 @@ public class VoterData  {
 
     public void setVoterDrno(String voterDrno) {
         this.voterDrno = voterDrno;
-    }
-
-    public String getVoterLane() {
-        return voterLane;
-    }
-
-    public void setVoterLane(String voterLane) {
-        this.voterLane = voterLane;
-    }
-
-    public String getVoterStreet() {
-        return voterStreet;
-    }
-
-    public void setVoterStreet(String voterStreet) {
-        this.voterStreet = voterStreet;
-    }
-
-    public String getVoterPlace() {
-        return voterPlace;
-    }
-
-    public void setVoterPlace(String voterPlace) {
-        this.voterPlace = voterPlace;
     }
 
     public String getVoterLandmark() {

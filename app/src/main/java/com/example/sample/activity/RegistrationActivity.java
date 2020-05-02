@@ -31,7 +31,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         ButterKnife.bind(this);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Registration Page");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Registration Page");//to set activity title in action bar
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 

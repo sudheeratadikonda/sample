@@ -94,12 +94,6 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     TextInputEditText etDob;
     @BindView(R.id.etDrNo)
     TextInputEditText etDrNo;
-    @BindView(R.id.etLane)
-    TextInputEditText etLane;
-    @BindView(R.id.etStreet)
-    TextInputEditText etStreet;
-    @BindView(R.id.etPlace)
-    TextInputEditText etPlace;
     @BindView(R.id.spinStateName)
     Spinner spinStateName;
     @BindView(R.id.spinDistName)
@@ -120,8 +114,8 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     DatabaseReference voterRef, myRefStates, myRefDistricts, myRefMandals;
     ArrayList<String> stateNameList, districtNameList, mandalNameList;
     ProgressDialog progressDialog, regProgress;
-    StorageReference storageReference;
-    String voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile, photoUrl;
+    StorageReference storageReference;//to store image in firebase
+    String voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLandmark, voterEmail, voterMobile, photoUrl;
 
 
     @Override
@@ -196,13 +190,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     voterName = Objects.requireNonNull(etVoterName.getText()).toString().trim();
                     voterGender = radioButton.getText().toString();
                     voterDoB = Objects.requireNonNull(etDob.getText()).toString().trim();
-                   /* voterState = spinStateName.getSelectedItem().toString();
-                    voterDistrict = spinDistName.getSelectedItem().toString();
-                    voterMandal = spinMandalName.getSelectedItem().toString();*/
                     voterDrno = Objects.requireNonNull(etDrNo.getText()).toString().trim();
-                    voterLane = Objects.requireNonNull(etLane.getText()).toString().trim();
-                    voterStreet = Objects.requireNonNull(etStreet.getText()).toString().trim();
-                    voterPlace = Objects.requireNonNull(etPlace.getText()).toString().trim();
                     voterLandmark = Objects.requireNonNull(etLandmark.getText()).toString().trim();
                     voterEmail = Objects.requireNonNull(etEmail.getText()).toString().trim();
                     voterMobile = Objects.requireNonNull(etMobile.getText()).toString().trim();
@@ -217,12 +205,6 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                         Toast.makeText(UploadVoterDetailsActivity.this, "Please enter DOB", Toast.LENGTH_SHORT).show();
                     } else if (voterDrno.isEmpty()) {
                         Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Door No", Toast.LENGTH_SHORT).show();
-                    } else if (voterLane.isEmpty()) {
-                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Lane ", Toast.LENGTH_SHORT).show();
-                    } else if (voterStreet.isEmpty()) {
-                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Street", Toast.LENGTH_SHORT).show();
-                    } else if (voterPlace.isEmpty()) {
-                        Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Place", Toast.LENGTH_SHORT).show();
                     } else if (voterLandmark.isEmpty()) {
                         Toast.makeText(UploadVoterDetailsActivity.this, "Please enter Landmark", Toast.LENGTH_SHORT).show();
                     } else if (voterEmail.isEmpty()) {
@@ -242,7 +224,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 while (!uriTask.isSuccessful()) ;
                                 Uri downloadUrl = uriTask.getResult();
                                 assert downloadUrl != null;
-                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLane, voterStreet, voterPlace, voterLandmark, voterEmail, voterMobile, "No", imgId);
+                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno,  voterLandmark, voterEmail, voterMobile, "No", imgId);
                                 assert imgId != null;
                                 voterRef.child(imgId).setValue(voterData);
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
