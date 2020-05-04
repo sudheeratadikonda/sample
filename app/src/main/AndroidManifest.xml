@@ -48,6 +48,13 @@
         <activity android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+        <activity android:name=".activity.VoterSearchActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity android:name=".activity.VoterListActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">

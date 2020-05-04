@@ -153,8 +153,6 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
         myRefMandals = FirebaseDatabase.getInstance().getReference("Mandal_Details");
 
 
-
-
         getStates();
         getDistrict("");
         getMandal("");
@@ -165,13 +163,18 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // date of birth picker
                 final Calendar c = Calendar.getInstance();
+                c.add(Calendar.YEAR,-18);
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-                c.setTimeInMillis(System.currentTimeMillis() - 1000);
+
+
+                //c.setTimeInMillis(System.currentTimeMillis() - 1000);
                 @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(UploadVoterDetailsActivity.this,
                         (view1, year, monthOfYear, dayOfMonth) -> etDob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year), mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+                //datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+
                 datePickerDialog.show();
             }
         });
@@ -224,7 +227,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                                 while (!uriTask.isSuccessful()) ;
                                 Uri downloadUrl = uriTask.getResult();
                                 assert downloadUrl != null;
-                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno,  voterLandmark, voterEmail, voterMobile, "No", imgId);
+                                VoterData voterData = new VoterData(downloadUrl.toString(), voterId, voterName, voterGender, voterDoB, voterState, voterDistrict, voterMandal, voterDrno, voterLandmark, voterEmail, voterMobile, "No", imgId);
                                 assert imgId != null;
                                 voterRef.child(imgId).setValue(voterData);
                                 Toast.makeText(UploadVoterDetailsActivity.this, "Voter Registration Successful", Toast.LENGTH_SHORT).show();
@@ -306,7 +309,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     });
 
                     progressDialog.dismiss();
-                }else {
+                } else {
                     progressDialog.dismiss();
                     stateNameList.clear();
                     stateNameList.add("Select State Name");
@@ -323,7 +326,6 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
     public void getDistrict(String selectedState) {
 
 
-
         //Retrieving District Names based on State Selected
         Query query1 = myRefDistricts.orderByChild("state").equalTo(selectedState);
         query1.addValueEventListener(new ValueEventListener() {
@@ -337,7 +339,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                         districtNameList.add(districtName);
                     }
 
-                }else {
+                } else {
                     districtNameList.clear();
                     districtNameList.add("Select District");
                 }
@@ -390,8 +392,7 @@ public class UploadVoterDetailsActivity extends AppCompatActivity {
                     }
 
 
-                }
-                else {
+                } else {
                     mandalNameList.clear();
                     mandalNameList.add("Select Mandal");
                 }

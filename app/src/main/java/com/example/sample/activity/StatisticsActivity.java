@@ -2,8 +2,11 @@ package com.example.sample.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StatisticsActivity extends AppCompatActivity {
 
@@ -50,6 +54,10 @@ public class StatisticsActivity extends AppCompatActivity {
     @BindView(R.id.txtFeMaleVotesPolled)
     TextView txtFeMaleVotesPolled;
     ProgressDialog progressDialog;
+    @BindView(R.id.btnSearchVote)
+    Button btnSearchVote;
+    @BindView(R.id.btnSearchVoteList)
+    Button btnSearchVoteList;
 
 
     @Override
@@ -76,6 +84,12 @@ public class StatisticsActivity extends AppCompatActivity {
         voterDataListFeMalePolled = new ArrayList<>();
         voterDataListPolled = new ArrayList<>();
 
+        getData();
+
+
+    }
+
+    public void getData() {
         //Total Voters
         myRefTotalVoters.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
@@ -123,12 +137,30 @@ public class StatisticsActivity extends AppCompatActivity {
 
                     }
 
+                    double countTotal = voterDataListTotal.size();
+                    double count = voterDataListPolled.size();
+                    double result = Math.round((count * 100) / countTotal);
+
+                    double count1 = voterDataListMale.size();
+                    double result1 = Math.round((count1 * 100) / countTotal);
+
+                    double count2 = voterDataListFeMale.size();
+                    double result2 = Math.round((count2 * 100) / countTotal);
+
+                    double count3 = voterDataListMalePolled.size();
+                    double result3 = Math.round((count3 * 100) / countTotal);
+
+                    double count4 = voterDataListFeMalePolled.size();
+                    double result4 = Math.round((count4 * 100) / countTotal);
+
+
                     txtTotalVotes.setText("Total Voters Count: " + voterDataListTotal.size());
-                    txtMaleVotes.setText("Total Male Voters Count : " + voterDataListMale.size());
-                    txtFemaleVotes.setText("Total Female Voters Count : " + voterDataListFeMale.size());
-                    txtTotalVotesPolled.setText("Total Voters Polled : " + voterDataListPolled.size());
-                    txtMaleVotesPolled.setText("Total Male Voters Polled: " + voterDataListMalePolled.size());
-                    txtFeMaleVotesPolled.setText("Total Female Voters Polled: " + voterDataListFeMalePolled.size());
+                    txtTotalVotesPolled.setText("Total Voters Polled : " + voterDataListPolled.size() + " (" + result + " % )");
+                    txtMaleVotes.setText("Total Male Voters Count : " + voterDataListMale.size() + " (" + result1 + " % )");
+                    txtFemaleVotes.setText("Total Female Voters Count : " + voterDataListFeMale.size() + " (" + result2 + " % )");
+                    txtMaleVotesPolled.setText("Total Male Voters Polled: " + voterDataListMalePolled.size() + " (" + result3 + " % )");
+                    txtFeMaleVotesPolled.setText("Total Female Voters Polled: " + voterDataListFeMalePolled.size() + " (" + result4 + " % )");
+
                     progressDialog.dismiss();
 
 
@@ -148,8 +180,6 @@ public class StatisticsActivity extends AppCompatActivity {
                 Toast.makeText(StatisticsActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     @Override
@@ -159,5 +189,21 @@ public class StatisticsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick({R.id.btnSearchVote, R.id.btnSearchVoteList})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnSearchVote:
+                Intent intent = new Intent(StatisticsActivity.this, VoterSearchActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                break;
+            case R.id.btnSearchVoteList:
+                Intent intent1 = new Intent(StatisticsActivity.this, VoterListActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent1);
+                break;
+        }
     }
 }

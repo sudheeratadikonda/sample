@@ -18,6 +18,8 @@
     <string name="state_code1">State Code</string>
     <string name="state_registration_form">State Registration Form</string>
     <string name="logout">Logout</string>
+    <string name="voter_search">Voter Search</string>
+    <string name="voter_mandal_list">Voter Mandal List</string>
     <string-array name="selectbranch">
         <item>CSE</item>
         <item>ECE</item>
