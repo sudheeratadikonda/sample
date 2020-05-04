@@ -3,13 +3,12 @@ package com.example.sample.activity;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,18 +17,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sample.R;
 import com.example.sample.modals.VoterData;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,10 +41,7 @@ public class StatisticsActivity extends AppCompatActivity {
     List<String> voterDataListFeMalePolled;
     List<String> voterDataListPolled;
 
-    PieChart pieChart;
-    PieData pieData;
-    PieDataSet pieDataSet;
-    ArrayList pieEntries;
+
     double result, result1, result2, result3, result4, countTotal, count, count1, count2, count3, count4;
 
     String TAG = "FIREBASE_DATA";
@@ -73,6 +63,18 @@ public class StatisticsActivity extends AppCompatActivity {
     Button btnSearchVote;
     @BindView(R.id.btnSearchVoteList)
     Button btnSearchVoteList;
+    @BindView(R.id.circular_progress)
+    ProgressBar circularProgress;
+    @BindView(R.id.circular_progress1)
+    ProgressBar circularProgress1;
+    @BindView(R.id.txtPercentage)
+    TextView txtPercentage;
+    @BindView(R.id.bottamLayout)
+    LinearLayout bottamLayout;
+    @BindView(R.id.txttotalCount)
+    TextView txttotalCount;
+    @BindView(R.id.txtTotalPolled)
+    TextView txtTotalPolled;
 
 
     @Override
@@ -99,8 +101,6 @@ public class StatisticsActivity extends AppCompatActivity {
         voterDataListFeMalePolled = new ArrayList<>();
         voterDataListPolled = new ArrayList<>();
 
-
-        //getEntries();
         getData();
 
 
@@ -180,7 +180,17 @@ public class StatisticsActivity extends AppCompatActivity {
                         txtFeMaleVotesPolled.setText("Total Female Voters Polled: " + voterDataListFeMalePolled.size() + " (" + result4 + " % )");
 
 
+                        circularProgress.setMax((int) countTotal);
+                        circularProgress.setProgress((int) countTotal);
+                        circularProgress1.setProgress((int) count); // <--
+                        circularProgress1.setMax((int) count); // <--
 
+                        txtPercentage.setText(result + " % ");
+                        txttotalCount.setText(voterDataListTotal.size()+"");
+                        txtTotalPolled.setText(voterDataListPolled.size()+"");
+                        /*circularProgress.setMax(20);
+                        circularProgress.setProgress(20);
+                        txtPercentage.setText("65%");*/
 
                     }
 
@@ -209,7 +219,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
 
-                getEntries();
+
             }
 
             @Override
@@ -219,26 +229,6 @@ public class StatisticsActivity extends AppCompatActivity {
         });
     }
 
-    private void getEntries() {
-        pieChart = findViewById(R.id.pieChart);
-        Log.d(TAG, "getEntries: " + countTotal + "  _____" + count + "  _____" + count1 + "  _____" + count2 + "  _____" + count3 + "  _____" + count4);
-        pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry((float) 10.0, 0));
-        pieEntries.add(new PieEntry(4f, 1));
-        pieEntries.add(new PieEntry(6f, 2));
-        pieEntries.add(new PieEntry(8f, 3));
-        pieEntries.add(new PieEntry(7f, 4));
-        pieEntries.add(new PieEntry(3f, 5));
-
-        pieDataSet = new PieDataSet(pieEntries, "Voters Data");
-        pieData = new PieData(pieDataSet);
-        pieChart.setData(pieData);
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        pieDataSet.setSliceSpace(2f);
-        pieDataSet.setValueTextColor(Color.WHITE);
-        pieDataSet.setValueTextSize(10f);
-        pieDataSet.setSliceSpace(5f);
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

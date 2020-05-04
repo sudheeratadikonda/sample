@@ -21,10 +21,167 @@
             android:orientation="vertical"
             >
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id = "@+id/pieChart"
-                android:layout_width = "match_parent"
-                android:layout_height = "250dp" />
+            <!--<FrameLayout
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                >
+
+                <ProgressBar
+                    android:id="@+id/circular_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressDrawable="@drawable/stats_full"
+                    android:textAlignment="center"/>
+
+                <ProgressBar
+                    android:id="@+id/circular_progress1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="75"
+                    android:progressDrawable="@drawable/stats_progress2"
+                    android:textAlignment="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtPercentage"
+                    android:text="75%"
+                    android:textSize="18sp"
+                    android:textColor="#000"
+                    android:layout_gravity="center"/>
+            </FrameLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:gravity="center">
+
+
+                <FrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    >
+
+                    <ProgressBar
+                        android:id="@+id/circular_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="100"
+                        android:progressDrawable="@drawable/stats_full"
+                        android:textAlignment="center"/>
+
+                    <ProgressBar
+                        android:id="@+id/circular_progress1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="75"
+                        android:progressDrawable="@drawable/stats_progress"
+                        android:textAlignment="center"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtPercentage"
+                        android:text="0%"
+                        android:textSize="18sp"
+                        android:textColor="#000"
+                        android:layout_gravity="center"/>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="#7F7C7C"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Voters Count:"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_marginStart="10dp"
+                            android:textAllCaps="true"
+                            android:textSize="8sp"
+                            android:textStyle="bold"
+                            tools:ignore="SmallSp" />
+
+                        <TextView
+                            android:id="@+id/txttotalCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="25%"
+                            android:textSize="12sp"
+                            android:layout_marginStart="10dp"
+                            android:textColor="#000"/>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="10dp">
+
+                        <View
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:background="@color/colorPrimaryDark"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Voters Polled :"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:layout_marginStart="10dp"
+                            android:textAllCaps="true"
+                            android:textSize="8sp"
+                            android:textStyle="bold"
+                            tools:ignore="SmallSp" />
+                        <TextView
+                            android:id="@+id/txtTotalPolled"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="75%"
+                            android:textSize="12sp"
+                            android:layout_marginStart="10dp"
+                            android:textColor="#000"/>
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

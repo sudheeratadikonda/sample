@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 public class VoterListAdapter extends RecyclerView.Adapter<VoterListAdapter.MyViewHolder> implements Filterable {
 
 
+
     private List<VoterData> userModelList;
     private List<VoterData> userModelListFull;
     private Context context;
@@ -55,7 +56,12 @@ public class VoterListAdapter extends RecyclerView.Adapter<VoterListAdapter.MyVi
 
                     for (VoterData androidVersion : userModelList) {
 
-                        if (androidVersion.getVoterName().toLowerCase().contains(charString)) {
+                        if (androidVersion.getVoterName().toLowerCase().contains(charString) ||
+                                androidVersion.getVoterMobile().contains(charString) ||
+                                androidVersion.getVoterDistrict().toLowerCase().contains(charString) ||
+                                androidVersion.getVoterMandal().toLowerCase().contains(charString) ||
+                                androidVersion.getVoterState().toLowerCase().contains(charString)
+                        ) {
 
                             filteredList.add(androidVersion);
                         }
@@ -90,6 +96,12 @@ public class VoterListAdapter extends RecyclerView.Adapter<VoterListAdapter.MyVi
         TextView txtPhone;
         @BindView(R.id.txtmeetTo)
         TextView txtmeetTo;
+        @BindView(R.id.txtMandal)
+        TextView txtMandal;
+        @BindView(R.id.txtDistrict)
+        TextView txtDistrict;
+        @BindView(R.id.txtState)
+        TextView txtState;
 
 
         MyViewHolder(View view) {
@@ -111,11 +123,14 @@ public class VoterListAdapter extends RecyclerView.Adapter<VoterListAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         VoterData userModel = userModelListFull.get(position);
-        holder.txtDepId.setText("User ID:  " + userModel.getVoterID());
-        holder.txtName.setText("Name:  " + userModel.getVoterName());
-        holder.txtEmail.setText("Email:  " + userModel.getVoterEmail());
-        holder.txtPhone.setText("Phone: " + userModel.getVoterMobile());
-        holder.txtmeetTo.setText("Status " + userModel.getVoterStatus());
+        holder.txtDepId.setText("User ID :  " + userModel.getVoterID());
+        holder.txtName.setText("Name :  " + userModel.getVoterName());
+        holder.txtEmail.setText("Email :  " + userModel.getVoterEmail());
+        holder.txtPhone.setText("Phone : " + userModel.getVoterMobile());
+        holder.txtmeetTo.setText("Status :  " + userModel.getVoterStatus());
+        holder.txtMandal.setText("Mandal \n" + userModel.getVoterMandal());
+        holder.txtDistrict.setText("District \n" + userModel.getVoterDistrict());
+        holder.txtState.setText("State \n" + userModel.getVoterState());
 
 
         Glide.with(context).load(userModel.getImageUrl()).into(holder.imgProfile);
