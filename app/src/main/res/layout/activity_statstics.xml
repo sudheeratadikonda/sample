@@ -9,86 +9,112 @@
     android:padding="20dp"
     tools:context=".activity.StatisticsActivity">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/roundedgrey_color"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@+id/bottamLayout">
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
-
-        <TextView
-            android:id="@+id/txtTotalVotes"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp" />
+            android:orientation="vertical"
+            >
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
+            <com.github.mikephil.charting.charts.PieChart
+                android:id = "@+id/pieChart"
+                android:layout_width = "match_parent"
+                android:layout_height = "250dp" />
 
-        <TextView
-            android:id="@+id/txtTotalVotesPolled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/roundedgrey_color"
+                android:orientation="vertical"
+                android:layout_marginTop="25dp"
+                >
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
 
-        <TextView
-            android:id="@+id/txtMaleVotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
+                <TextView
+                    android:id="@+id/txtTotalVotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
 
-        <TextView
-            android:id="@+id/txtFemaleVotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
+                <TextView
+                    android:id="@+id/txtTotalVotesPolled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
 
-        <TextView
-            android:id="@+id/txtMaleVotesPolled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
+                <TextView
+                    android:id="@+id/txtMaleVotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
 
-        <TextView
-            android:id="@+id/txtFeMaleVotesPolled"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/greycolor" />
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/txtFemaleVotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
+
+                <TextView
+                    android:id="@+id/txtMaleVotesPolled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
+
+                <TextView
+                    android:id="@+id/txtFeMaleVotesPolled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/greycolor" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+
 
     <LinearLayout
+        android:id="@+id/bottamLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

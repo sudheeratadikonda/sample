@@ -3,7 +3,10 @@ package com.example.sample.activity;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,12 +18,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sample.R;
 import com.example.sample.modals.VoterData;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +47,12 @@ public class StatisticsActivity extends AppCompatActivity {
     List<String> voterDataListMalePolled;
     List<String> voterDataListFeMalePolled;
     List<String> voterDataListPolled;
+
+    PieChart pieChart;
+    PieData pieData;
+    PieDataSet pieDataSet;
+    ArrayList pieEntries;
+    double result, result1, result2, result3, result4, countTotal, count, count1, count2, count3, count4;
 
     String TAG = "FIREBASE_DATA";
     DatabaseReference myRefTotalVoters;
@@ -84,19 +99,23 @@ public class StatisticsActivity extends AppCompatActivity {
         voterDataListFeMalePolled = new ArrayList<>();
         voterDataListPolled = new ArrayList<>();
 
+
+        //getEntries();
         getData();
 
 
     }
 
+
     public void getData() {
+
         //Total Voters
         myRefTotalVoters.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-
+                    progressDialog.dismiss();
                     voterDataListTotal.clear();
                     voterDataListMale.clear();
                     voterDataListFeMale.clear();
@@ -135,31 +154,47 @@ public class StatisticsActivity extends AppCompatActivity {
                         }
 
 
+                        countTotal = voterDataListTotal.size();
+
+                        count = voterDataListPolled.size();
+                        result = Math.round((count * 100) / countTotal);
+
+                        count1 = voterDataListMale.size();
+                        result1 = Math.round((count1 * 100) / countTotal);
+
+                        count2 = voterDataListFeMale.size();
+                        result2 = Math.round((count2 * 100) / countTotal);
+
+                        count3 = voterDataListMalePolled.size();
+                        result3 = Math.round((count3 * 100) / countTotal);
+
+                        count4 = voterDataListFeMalePolled.size();
+                        result4 = Math.round((count4 * 100) / countTotal);
+
+
+                        txtTotalVotes.setText("Total Voters Count: " + voterDataListTotal.size());
+                        txtTotalVotesPolled.setText("Total Voters Polled : " + voterDataListPolled.size() + " (" + result + " % )");
+                        txtMaleVotes.setText("Total Male Voters Count : " + voterDataListMale.size() + " (" + result1 + " % )");
+                        txtFemaleVotes.setText("Total Female Voters Count : " + voterDataListFeMale.size() + " (" + result2 + " % )");
+                        txtMaleVotesPolled.setText("Total Male Voters Polled: " + voterDataListMalePolled.size() + " (" + result3 + " % )");
+                        txtFeMaleVotesPolled.setText("Total Female Voters Polled: " + voterDataListFeMalePolled.size() + " (" + result4 + " % )");
+
+
+
+
                     }
 
-                    double countTotal = voterDataListTotal.size();
-                    double count = voterDataListPolled.size();
-                    double result = Math.round((count * 100) / countTotal);
-
-                    double count1 = voterDataListMale.size();
-                    double result1 = Math.round((count1 * 100) / countTotal);
-
-                    double count2 = voterDataListFeMale.size();
-                    double result2 = Math.round((count2 * 100) / countTotal);
-
-                    double count3 = voterDataListMalePolled.size();
-                    double result3 = Math.round((count3 * 100) / countTotal);
-
-                    double count4 = voterDataListFeMalePolled.size();
-                    double result4 = Math.round((count4 * 100) / countTotal);
 
 
-                    txtTotalVotes.setText("Total Voters Count: " + voterDataListTotal.size());
-                    txtTotalVotesPolled.setText("Total Voters Polled : " + voterDataListPolled.size() + " (" + result + " % )");
-                    txtMaleVotes.setText("Total Male Voters Count : " + voterDataListMale.size() + " (" + result1 + " % )");
-                    txtFemaleVotes.setText("Total Female Voters Count : " + voterDataListFeMale.size() + " (" + result2 + " % )");
-                    txtMaleVotesPolled.setText("Total Male Voters Polled: " + voterDataListMalePolled.size() + " (" + result3 + " % )");
-                    txtFeMaleVotesPolled.setText("Total Female Voters Polled: " + voterDataListFeMalePolled.size() + " (" + result4 + " % )");
+                   /* Log.d(TAG, "getEntries: "+(int)countTotal);
+                    pieEntries = new ArrayList<>();
+                    pieEntries.add(new PieEntry((int)countTotal, 0));
+                    pieEntries.add(new PieEntry((int)count, 1));
+                    pieEntries.add(new PieEntry((int)count1, 2));
+                    pieEntries.add(new PieEntry(3f, 3));
+                    pieEntries.add(new PieEntry(7f, 4));
+                    pieEntries.add(new PieEntry((int)countTotal, 5));*/
+
 
                     progressDialog.dismiss();
 
@@ -173,6 +208,8 @@ public class StatisticsActivity extends AppCompatActivity {
                     txtFeMaleVotesPolled.setText("Total Female Voters Polled: 0");
                     progressDialog.dismiss();
                 }
+
+                getEntries();
             }
 
             @Override
@@ -180,6 +217,27 @@ public class StatisticsActivity extends AppCompatActivity {
                 Toast.makeText(StatisticsActivity.this, "" + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getEntries() {
+        pieChart = findViewById(R.id.pieChart);
+        Log.d(TAG, "getEntries: " + countTotal + "  _____" + count + "  _____" + count1 + "  _____" + count2 + "  _____" + count3 + "  _____" + count4);
+        pieEntries = new ArrayList<>();
+        pieEntries.add(new PieEntry((float) 10.0, 0));
+        pieEntries.add(new PieEntry(4f, 1));
+        pieEntries.add(new PieEntry(6f, 2));
+        pieEntries.add(new PieEntry(8f, 3));
+        pieEntries.add(new PieEntry(7f, 4));
+        pieEntries.add(new PieEntry(3f, 5));
+
+        pieDataSet = new PieDataSet(pieEntries, "Voters Data");
+        pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+        pieDataSet.setSliceSpace(2f);
+        pieDataSet.setValueTextColor(Color.WHITE);
+        pieDataSet.setValueTextSize(10f);
+        pieDataSet.setSliceSpace(5f);
     }
 
     @Override
