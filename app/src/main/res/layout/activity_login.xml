@@ -7,7 +7,9 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="20dp"
-    tools:context=".activity.LoginActivity">
+    tools:context=".activity.LoginActivity"
+    android:background="@drawable/ic_touch_app_black_24dp1"
+    android:layout_marginBottom="40dp">
 
 
     <TextView
@@ -15,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:text="LOGIN"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/violet"
         android:textSize="21sp"/>
 
 
@@ -53,11 +55,11 @@
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Login"
         android:textColor="@color/colorWhite"
-        android:background="@color/colorAccent"/>
+        android:background="@drawable/button_focused_orange1"/>
 
 </LinearLayout>

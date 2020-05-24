@@ -76,126 +76,8 @@ public class AddMandalActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("State_Details");
         databaseReference1 = FirebaseDatabase.getInstance().getReference("District_Details");
 
-        // Retrieving State Name
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    stateList.clear();
-                    stateList.add("Select State Name");
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
-                        stateList.add(stateName);
-                    }
-
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, stateList);
-                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                    spinStateName.setAdapter(arrayAdapter);
-                    progressDialog.dismiss();
-                    //Retrieving State Code as per State Name
-                    spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                            String selectedState = spinStateName.getSelectedItem().toString();
-
-                            Query query = databaseReference.orderByChild("state").equalTo(selectedState);
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                            String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
-                                            etStateCode.setText(stateCode);
-                                        }
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-                            //Retrieving District Names based on State Selected
-                            Query query1 = databaseReference1.orderByChild("state").equalTo(selectedState);
-                            query1.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if (dataSnapshot.exists()) {
-                                        districtList.clear();
-                                        districtList.add("Select District Name");
-                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                            String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
-                                            districtList.add(districtName);
-                                        }
-
-                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, districtList);
-                                        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                                        spinDistName.setAdapter(arrayAdapter);
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
-                            //Retrieving District Code as per District Name
-                            spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                                    String selectedDistrict = spinDistName.getSelectedItem().toString();
-
-                                    Query query = databaseReference1.orderByChild("districtname").equalTo(selectedDistrict);
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            if (dataSnapshot.exists()) {
-
-                                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                                    String districtCode = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictcode();
-                                                    etDistCode.setText(districtCode);
-                                                }
-                                                progressDialog.dismiss();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
-
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-
-                        }
-                    });
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+getStates();
+getDistrict("");
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -261,7 +143,147 @@ public class AddMandalActivity extends AppCompatActivity {
         });
 
     }
+    public void getStates() {
 
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    stateList.clear();
+                    stateList.add("Select State");
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String stateName = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getState();
+                        stateList.add(stateName);
+                    }
+
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, stateList);
+                    arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                    spinStateName.setAdapter(arrayAdapter);
+
+
+                    spinStateName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                            stateName = spinStateName.getSelectedItem().toString();
+                            Query query = databaseReference.orderByChild("state").equalTo(stateName);
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            String stateCode = Objects.requireNonNull(dataSnapshot1.getValue(StateData.class)).getStatecode();
+                                            etStateCode.setText(stateCode);
+                                        }
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
+                            getDistrict(stateName);
+
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                            getDistrict("");
+                        }
+                    });
+
+                    progressDialog.dismiss();
+                } else {
+                    progressDialog.dismiss();
+                    stateList.clear();
+                    stateList.add("Select State Name");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getDistrict(String selectedState) {
+
+
+        //Retrieving District Names based on State Selected
+        Query query1 = databaseReference1.orderByChild("state").equalTo(selectedState);
+        query1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    districtList.clear();
+                    districtList.add("Select District");
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String districtName = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictname();
+                        districtList.add(districtName);
+                    }
+
+                } else {
+                    districtList.clear();
+                    districtList.add("Select District");
+                }
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddMandalActivity.this, R.layout.support_simple_spinner_dropdown_item, districtList);
+                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                spinDistName.setAdapter(arrayAdapter);
+
+                //Retrieving Mandal Name as per District Name
+                spinDistName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        districtName = spinDistName.getSelectedItem().toString();
+                        Query query = databaseReference1.orderByChild("districtname").equalTo(districtName);
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+
+                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                        String districtCode = Objects.requireNonNull(dataSnapshot1.getValue(DistrictData.class)).getDistrictcode();
+                                        etDistCode.setText(districtCode);
+                                    }
+                                    progressDialog.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

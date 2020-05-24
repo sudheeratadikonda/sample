@@ -61,6 +61,7 @@ dependencies {
     // butter Knife
     //noinspection AnnotationProcessorOnCompilePath
     implementation 'com.jakewharton:butterknife:10.2.1'//to generate id in activity
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
 

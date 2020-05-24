@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".activity.VoteActivity">
+    tools:context=".activity.VoteActivity"
+    android:background="@drawable/ic_touch_app_black_24dp1"
+    android:layout_marginBottom="30dp">
 
    <LinearLayout
        android:layout_width="match_parent"
@@ -36,11 +38,11 @@
                android:layout_height="45dp"
                android:id="@+id/btnSearch"
                android:layout_marginStart="10dp"
-               android:background="@color/colorAccent"
+               android:background="@drawable/button_hover"
                android:text="Search"
                android:textColor="@color/colorWhite"
                android:layout_weight="2"/>
-
+9853819859108
        </LinearLayout>
 
        <LinearLayout

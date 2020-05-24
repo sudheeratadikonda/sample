@@ -14,7 +14,7 @@ public class MyAppPrefsManager {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor prefsEditor;
 
-    private static final String PREF_NAME = "DIGITAL_ATTENDANCE";
+    private static final String PREF_NAME = "VOTER_VERIFICATION";
 
 
     private static final String IS_USER_LOGGED_IN_ADMIN = "isLogged_in_Admin";
