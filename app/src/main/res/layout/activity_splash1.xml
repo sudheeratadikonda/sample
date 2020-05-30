@@ -24,7 +24,8 @@
         android:text="VOTER VERIFICATION"
         android:textColor="@android:color/black"
         android:textSize="25sp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+       />
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

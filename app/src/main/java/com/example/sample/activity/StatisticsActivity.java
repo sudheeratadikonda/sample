@@ -183,7 +183,7 @@ public class StatisticsActivity extends AppCompatActivity {
                         circularProgress.setMax((int) countTotal);
                         circularProgress.setProgress((int) countTotal);
 
-                        circularProgress1.setMax((int) count); // <--
+                        circularProgress1.setMax((int) countTotal); // <--
                         circularProgress1.setProgress((int) count); // <--
 
                         txtPercentage.setText(result + " % ");

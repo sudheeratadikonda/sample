@@ -62,7 +62,6 @@ public class AddStateActivity extends AppCompatActivity {
                 } else if (stateCode.isEmpty()) {
                     Toast.makeText(AddStateActivity.this, "Enter State Code", Toast.LENGTH_SHORT).show();
                 } else {
-
                     myref.child(stateName).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
